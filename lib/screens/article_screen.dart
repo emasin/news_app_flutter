@@ -72,6 +72,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.articleUrl);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: isLightTheme
@@ -120,7 +121,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
         index: position,
         children: [
           WebView(
-            initialUrl: widget.articleUrl,
+            initialUrl: "https://newming.io/share/article/4f6b3ad74e884acd3980559b37f33887",
             javascriptMode: JavascriptMode.unrestricted,
             onPageStarted: (value) {
               setState(() {

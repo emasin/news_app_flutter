@@ -173,11 +173,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: articles.length,
                     itemBuilder: (BuildContext context, int index) {
                       return NewsTile(
+                        uid:  articles[index].uid,
                         image: articles[index].image,
                         title: articles[index].title,
-                        content: articles[index].content,
-                        date: articles[index].publishedDate,
+                        content: "",
+                        date: articles[index].published_at,
                         fullArticle: articles[index].fullArticle,
+                        tags:articles[index].tags,
                       );
                     },
                   ),

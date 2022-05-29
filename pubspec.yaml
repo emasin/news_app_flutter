@@ -11,19 +11,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cached_network_image: ^3.0.0
-  webview_flutter: ^2.0.8
+  cached_network_image: ^3.2.1
+  webview_flutter: ^3.0.4
   http: ^0.13.3
   connectivity_plus: ^1.0.3
   shimmer: ^2.0.0
   hive: ^2.0.4
-  provider: ^5.0.0
+  provider: ^6.0.3
   path_provider: ^2.0.2
   transition: ^2.0.2
   fluttertoast: ^8.0.8
   url_launcher: ^6.0.12
   share_plus: ^3.0.4
   cupertino_icons: ^1.0.2
+  platform: ^3.1.0
+  timeago: ^3.1.0
 
 dev_dependencies:
   flutter_launcher_name: ^0.0.1
