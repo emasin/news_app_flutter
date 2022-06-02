@@ -19,6 +19,7 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
+
   Future<String> _fetch1() async {
 
 
@@ -169,6 +170,7 @@ class _ArticlePageState extends State<ArticlePage> {
           ),
           SliverToBoxAdapter(
             child: Container(
+              height: size.height,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
@@ -256,11 +258,29 @@ class _ArticlePageState extends State<ArticlePage> {
                     SizedBox(
                       height: 20,
                     ),
-                    FutureBuilder<String>(
+                    Container(height: size.height * 0.9 ,child:Column(children:[ Flexible(child:FutureBuilder<String>(
                       future: _fetch1(),
                       builder: (context, snapshot) {
+
+                        List<String?>? paragraphs2 = [];
                         if (snapshot.hasData) {
-                          return Text(snapshot.data.toString(),style: kLabelblack,);
+
+                          //var photos = jsonData[0]["photos"];
+
+
+                          List<String>? paragraphs =  snapshot.data?.split('%NEW_LINE%');
+
+                          paragraphs2 =
+                          paragraphs?.map((String p) {
+                            if(p != '' && p != 'null') {
+                              print(p);
+                              return p;
+                            }
+                          })
+                              .toList();
+
+
+
                         } else if (snapshot.hasError) {
                           print(snapshot.data); // null
                           print(snapshot.error); // 에러메세지 ex) 사용자 정보를 확인할 수 없습니다.
@@ -272,8 +292,19 @@ class _ArticlePageState extends State<ArticlePage> {
                             height: 30,
                           );
                         }
+
+
+                        return ListView.builder(
+                          itemCount: paragraphs2?.length,
+                          itemBuilder: (context, index) {
+
+                            return Text(paragraphs2![index] == null ? "" : paragraphs2![index].toString());
+                          },
+                        );
                       },
-                    ),
+                    ),)]
+                    ),)
+
                   ],
                 ),
               ),
