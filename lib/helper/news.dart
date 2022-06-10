@@ -8,9 +8,9 @@ class News {
 
   Future getNews({String? category}) async {
     String kDailyhuntEndpoint =
-        'https://reward-api.staging.newming.io/v2/api/interest/recent/news';
+        'https://reward-api.newming.io/v2/api/interest/recent/news';
     String kinshortsEndpoint =
-        'https://reward-api.staging.newming.io/v2/api/interest/recent/news';
+        'https://reward-api.newming.io/v2/api/interest/recent/news';
 
     http.Client client = http.Client();
     http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
