@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.2.1
-  webview_flutter: ^3.0.4
+  flutter_widget_from_html_core: ^0.8.5+3
   http: ^0.13.3
   connectivity_plus: ^1.0.3
   shimmer: ^2.0.0

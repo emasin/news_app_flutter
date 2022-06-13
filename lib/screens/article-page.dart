@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/models/news.dart';
 import 'package:timeago/timeago.dart' as timego;
 import 'package:news_app/paltte.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 class ArticlePage extends StatefulWidget {
   const ArticlePage({Key? key, required this.article}) : super(key: key);
@@ -91,53 +92,13 @@ class _ArticlePageState extends State<ArticlePage> {
                 Transform.translate(
                   offset: const Offset(
                     0,
-                    200,
+                    100,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [ClipRect(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 3.0,
-                              sigmaY: 3.0,
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(22),
-                              ),
-                              child: Text(
-                                widget.article.category,
-                                style: kLabelText,
-                              ),
-                            ),
-                          ),
-                        ),ClipRect(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 3.0,
-                              sigmaY: 3.0,
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(22),
-                              ),
-                              child: Text(
-                                widget.article.category,
-                                style: kLabelText,
-                              ),
-                            ),
-                          ),
-                        )],)
-                        ,
 
                         SizedBox(
                           height: 20,
@@ -146,20 +107,53 @@ class _ArticlePageState extends State<ArticlePage> {
                           widget.article.title,
                           style: kBoldHeading.copyWith(
                             color: Colors.white,
-                            fontSize: 22,
+                            fontSize: 22, backgroundColor: Colors.black54
                           ),
                         ),
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          widget.article.tags,
-                          style: TextStyle(
-                            fontSize: 16,
-                            height: 1.5,
-                            color: Colors.white,
+                        Row(children: [
+                          Text(
+                            widget.article.tags,
+                            style: TextStyle(
+                                fontSize: 16,
+                                height: 1.5,
+                                color: Colors.white,
+                                backgroundColor: Colors.black38
+                            ),
                           ),
-                        ),
+                          Spacer(),
+                          SizedBox(width: 8,),
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(
+                                12,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.watch_later_outlined,
+                                  color: Colors.grey.shade400,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  timego.format(
+                                    widget.article.time,
+                                    locale: 'en_short',
+                                  ),
+                                  style: kLabelblack,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],),
+
 
                       ],
                     ),
@@ -179,7 +173,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -191,75 +185,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                 height: 20,
                               ),
                               Row(
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade900,
-                                            borderRadius: BorderRadius.circular(26),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                maxRadius: 16,
-                                                backgroundImage: NetworkImage(
-                                                  widget.article.authorPhoto,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 12,
-                                              ),
-                                              Text(
-                                                widget.article.author,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 12,
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
-                                      borderRadius: BorderRadius.circular(
-                                        24,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.watch_later_outlined,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Text(
-                                          timego.format(
-                                            widget.article.time,
-                                            locale: 'en_short',
-                                          ),
-                                          style: kLabelblack,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                ],
+                                children: [],
                               ),
                               SizedBox(
                                 height: 20,
@@ -273,9 +199,8 @@ class _ArticlePageState extends State<ArticlePage> {
 
                                     //var photos = jsonData[0]["photos"];
 
-
-                                    List<String>? paragraphs =  snapshot.data?.split('%NEW_LINE%');
-
+                                    paragraphs2 =  snapshot.data?.split('%NEW_LINE%');
+/**
                                     paragraphs2 =
                                         paragraphs?.map((String p) {
                                           if(p != '' && p != 'null') {
@@ -286,7 +211,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                             .toList();
 
 
-
+**/
                                   } else if (snapshot.hasError) {
                                     print(snapshot.data); // null
                                     print(snapshot.error); // 에러메세지 ex) 사용자 정보를 확인할 수 없습니다.
@@ -306,7 +231,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
 
-                                      return Text(paragraphs2![index].toString(),style:kLabelblack);
+                                      return Padding(padding: const EdgeInsets.symmetric(vertical: 5),child: HtmlWidget(paragraphs2![index].toString(),textStyle: kLabelblack,), );
                                     },
                                   );
                                 },

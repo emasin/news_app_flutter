@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/models/news.dart';
-import 'package:news_app/screens/article_screen.dart';
 import 'package:news_app/screens/image_screen.dart';
 import 'package:transition/transition.dart';
 
@@ -107,7 +106,7 @@ class NewsTile extends StatelessWidget {
                 Navigator.push(
                   context,
                   Transition(
-                    child: ArticlePage(article:new Article(uid:uid,title: title, author: 'author', authorPhoto: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80', category: 'Health', content: content, tags: tags, featuredImage: image, views: 10, time: DateTime.parse('2022-05-27T07:53:41.000Z'))),//ArticleScreen(articleUrl: fullArticle),
+                    child: ArticlePage(article:new Article(uid:uid,title: title, author: 'author', authorPhoto: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80', category: 'Health', content: content, tags: tags, featuredImage: image, views: 10, time: DateTime.parse(date))),//ArticleScreen(articleUrl: fullArticle),
                     transitionEffect: TransitionEffect.BOTTOM_TO_TOP,
                   ),
                 );
