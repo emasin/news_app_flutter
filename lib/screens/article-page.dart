@@ -7,7 +7,9 @@ import 'package:news_app/models/news.dart';
 import 'package:timeago/timeago.dart' as timego;
 import 'package:news_app/paltte.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
-
+import 'package:hive/hive.dart';
+import 'package:news_app/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 class ArticlePage extends StatefulWidget {
   const ArticlePage({Key? key, required this.article}) : super(key: key);
 
@@ -53,15 +55,33 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   void initState() {
     super.initState();
+    getTheme();
 
   }
 
+  Icon themeIcon = Icon(Icons.dark_mode);
+  bool isLightTheme = false;
+
+  Color baseColor = Colors.grey[300]!;
+  Color highlightColor = Colors.grey[100]!;
+
+
+  getTheme() async {
+    final settings = await Hive.openBox('settings');
+    setState(() {
+      isLightTheme = settings.get('isLightTheme') ?? false;
+      baseColor = isLightTheme ? Colors.grey[300]! : Color(0xff2c2c2c);
+      highlightColor = isLightTheme ? Colors.grey[100]! : Color(0xff373737);
+      themeIcon = isLightTheme ? Icon(Icons.dark_mode) : Icon(Icons.light_mode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: themeProvider.themeMode().backgroundColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -106,8 +126,8 @@ class _ArticlePageState extends State<ArticlePage> {
                         Text(
                           widget.article.title,
                           style: kBoldHeading.copyWith(
-                            color: Colors.white,
-                            fontSize: 22, backgroundColor: Colors.black54
+                            color: themeProvider.isLightTheme ? Colors.black : Colors.white,
+                            fontSize: 22, backgroundColor: themeProvider.isLightTheme ? Colors.white70 : Colors.black54,
                           ),
                         ),
                         SizedBox(
@@ -117,12 +137,21 @@ class _ArticlePageState extends State<ArticlePage> {
                           Text(
                             widget.article.tags,
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 height: 1.5,
-                                color: Colors.white,
-                                backgroundColor: Colors.black38
+                                color: themeProvider.isLightTheme ? Colors.black : Colors.white,
+                                backgroundColor: themeProvider.isLightTheme ? Colors.white70 : Colors.black38,
                             ),
                           ),
+                          Spacer(),
+                          SizedBox(width: 8,),
+
+                        ],),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(children: [
+
                           Spacer(),
                           SizedBox(width: 8,),
                           Container(
@@ -152,8 +181,7 @@ class _ArticlePageState extends State<ArticlePage> {
                               ],
                             ),
                           )
-                        ],),
-
+                        ],)
 
                       ],
                     ),
@@ -172,7 +200,7 @@ class _ArticlePageState extends State<ArticlePage> {
                       Container(
 
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: themeProvider.themeMode().toggleBackgroundColor,
                           borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
                         ),
                         child: Padding(
@@ -231,7 +259,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
 
-                                      return Padding(padding: const EdgeInsets.symmetric(vertical: 5),child: HtmlWidget(paragraphs2![index].toString(),textStyle: kLabelblack,), );
+                                      return Padding(padding: const EdgeInsets.symmetric(vertical: 5),child: HtmlWidget( paragraphs2![index].toString(),textStyle: TextStyle(color:themeProvider.themeMode().textColor,fontSize: 16),), );
                                     },
                                   );
                                 },
