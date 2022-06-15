@@ -23,12 +23,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
-    categories = getCategories();
+    getCategory();
     Connectivity().onConnectivityChanged.listen((event) {
       checkConnectivity();
     });
     getTheme();
   }
+
+  getCategory() async {
+      categories = await getCategories();
+      setState(() {
+        categories = categories;
+      });
+  }
+
 
   getTheme() async {
     final settings = await Hive.openBox('settings');

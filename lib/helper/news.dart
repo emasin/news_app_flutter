@@ -3,14 +3,16 @@ import 'package:news_app/models/article_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants.dart';
+
 class News {
   List<Article> news = [];
 
   Future getNews({String? category}) async {
     String kDailyhuntEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news';
+        'https://reward-api.newming.io/v2/api/interest/recent/news?size=30';
     String kinshortsEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news';
+        'https://reward-api.newming.io/v2/api/interest/recent/news?size=30';
 
     http.Client client = http.Client();
     http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
@@ -27,8 +29,8 @@ class News {
             Article articleModel = Article(
               publishedDate: element['date'].toString(),
               publishedTime: element['time'].toString(),
-              image: element['thumbnail'].toString().replaceAll(".staging", ""),
-              thumbnail: element['thumbnail'].toString().replaceAll(".staging", ""),
+              image: element['thumbnail'] == "" ? kAllImage :element['thumbnail'] ,
+              thumbnail:element['thumbnail'] == "" ? kAllImage :element['thumbnail'] ,
               content: element['content'].toString(),
               fullArticle: element['title'].toString(),
               title: element['title'].toString(),

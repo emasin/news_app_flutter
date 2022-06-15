@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:news_app/constants.dart';
 import 'package:news_app/models/news.dart';
 import 'package:news_app/screens/image_screen.dart';
 import 'package:transition/transition.dart';
@@ -47,7 +48,7 @@ class NewsTile extends StatelessWidget {
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
-                    imageUrl: image,
+                    imageUrl: image == "" ? kAllImage : image,
                     placeholder: (context, url) => Image(
                       image: AssetImage('images/dotted-placeholder.jpg'),
                       height: 200,

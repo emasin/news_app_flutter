@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'GripLabs',
+              'Newming',
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
