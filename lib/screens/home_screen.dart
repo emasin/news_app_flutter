@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/components/shimmer_news_tile.dart';
 import 'package:news_app/provider/theme_provider.dart';
+import 'package:news_app/provider/count_provider.dart';
 import 'package:news_app/screens/category_screen.dart';
 import 'package:news_app/components/news_tile.dart';
 import 'package:news_app/helper/news.dart';
+import 'package:news_app/screens/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:transition/transition.dart';
@@ -41,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _loading = true;
     getNews();
     getTheme();
+
+
   }
 
   getTheme() async {
@@ -133,9 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
-              'Supporters',
+              'Supporters ${Provider.of<Counter>(context).count}',
               style: TextStyle(color: Color(0xffFCAF38)),
-            ),
+            )
           ],
         ),
         actions: [
