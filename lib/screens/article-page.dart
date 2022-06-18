@@ -4,12 +4,16 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:news_app/models/news.dart';
+import 'package:news_app/data/example_data.dart' as Example;
 import 'package:timeago/timeago.dart' as timego;
 import 'package:news_app/paltte.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:flutter_reaction_button/flutter_reaction_button.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 class ArticlePage extends StatefulWidget {
   const ArticlePage({Key? key, required this.article}) : super(key: key);
 
@@ -22,6 +26,18 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
+
+  final List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
+  ];
+  String? selectedValue;
 
   Future<String> _fetch1() async {
 
@@ -50,6 +66,21 @@ class _ArticlePageState extends State<ArticlePage> {
     return result;
 
   }
+
+  void _articleShare(String uid) async {
+
+
+
+    var url =
+        'https://newming.io/share/article/${uid}';
+
+    await Share.share(url, subject: widget.article.title);
+
+
+  }
+
+
+
 
 
   @override
@@ -180,9 +211,40 @@ class _ArticlePageState extends State<ArticlePage> {
                                 ),
                               ],
                             ),
+
+                          ),SizedBox(width: 8,),
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(
+                                12,
+                              ),
+                            ),
+                            child: GestureDetector(
+                                onTap: () {
+                                  _articleShare(widget.article.uid);
+
+                                },
+                                child:Row(
+                              children: [
+                                Icon(
+                                  Icons.share,
+                                  color: Colors.grey.shade400,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  "1k",
+                                  style: kLabelblack,
+                                ),
+                              ],
+                            )) ,
+
                           )
                         ],)
-
+,
                       ],
                     ),
                   ),
@@ -212,12 +274,7 @@ class _ArticlePageState extends State<ArticlePage> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Row(
-                                children: [],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
+
                               FutureBuilder<String>(
                                 future: _fetch1(),
                                 builder: (context, snapshot) {
@@ -228,18 +285,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     //var photos = jsonData[0]["photos"];
 
                                     paragraphs2 =  snapshot.data?.split('%NEW_LINE%');
-/**
-                                    paragraphs2 =
-                                        paragraphs?.map((String p) {
-                                          if(p != '' && p != 'null') {
-                                            print(p);
-                                            return p;
-                                          }
-                                        })
-                                            .toList();
 
-
-**/
                                   } else if (snapshot.hasError) {
                                     print(snapshot.data); // null
                                     print(snapshot.error); // 에러메세지 ex) 사용자 정보를 확인할 수 없습니다.
@@ -259,8 +305,53 @@ class _ArticlePageState extends State<ArticlePage> {
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
 
-                                      return Padding(padding: const EdgeInsets.symmetric(vertical: 5),child: HtmlWidget( paragraphs2![index].toString(),textStyle: TextStyle(color:themeProvider.themeMode().textColor,fontSize: 16),), );
-                                    },
+                                      return DropdownButtonHideUnderline(
+                                        child:DropdownButton2(
+                                          customButton: Padding(padding: const EdgeInsets.symmetric(vertical: 6),
+                                          child:HtmlWidget( paragraphs2![index].toString(),textStyle: TextStyle(color:themeProvider.themeMode().textColor,fontSize: 16))),
+                                          openWithLongPress: true,
+                                          customItemsIndexes: const [4],
+                                          customItemsHeight: 8,
+                                          items: [
+                                            ...MenuItems.firstItems.map(
+                                                  (item) =>
+                                                  DropdownMenuItem<MenuItem>(
+                                                    value: item,
+                                                    child: MenuItems.buildItem(item),
+                                                  ),
+                                            ),
+                                            const DropdownMenuItem<Divider>(enabled: false, child: Divider()),
+                                            ...MenuItems.secondItems.map(
+                                                  (item) =>
+                                                  DropdownMenuItem<MenuItem>(
+                                                    value: item,
+                                                    child: MenuItems.buildItem(item),
+                                                  ),
+                                            ),
+                                          ],
+                                          onChanged: (value) {
+                                            MenuItems.onChanged(context, value as MenuItem);
+                                          },
+                                          itemHeight: 40,
+                                          itemPadding: const EdgeInsets.only(left: 16, right: 16),
+                                          dropdownWidth: 160,
+                                          dropdownPadding: const EdgeInsets.symmetric(vertical: 6),
+                                          dropdownDecoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(4),
+                                            color: Colors.redAccent,
+                                          ),
+                                          dropdownElevation: 8,
+                                          offset:  Offset(size.width, (paragraphs2[index].toString().length/20)*5),
+                                        )
+
+                                      );
+    /**
+
+                                      return Padding(padding: const EdgeInsets.symmetric(vertical: 5),child:GestureDetector(
+                                          onLongPress: () {print(paragraphs2![index].toString());},
+                                          child:HtmlWidget( paragraphs2![index].toString(),textStyle: TextStyle(color:themeProvider.themeMode().textColor,fontSize: 16),)) , );
+**/
+                                      },
                                   );
                                 },
                               )
@@ -290,5 +381,67 @@ class _ArticlePageState extends State<ArticlePage> {
         ],
       ),
     );
+  }
+}
+
+class MenuItem {
+  final String text;
+  final IconData icon;
+
+  const MenuItem({
+    required this.text,
+    required this.icon,
+  });
+}
+
+class MenuItems {
+  static const List<MenuItem> firstItems = [like, flag, youtube,album,];
+  static const List<MenuItem> secondItems = [cancel];
+
+  static const like = MenuItem(text: '이모지', icon: Icons.emoji_emotions_outlined);
+  static const flag = MenuItem(text: '가장 중용한!', icon: Icons.flag);
+  static const youtube = MenuItem(text: 'Youtube', icon: Icons.play_circle_outline);
+  static const album = MenuItem(text: '첨부', icon: Icons.picture_as_pdf_outlined);
+  static const cancel = MenuItem(text: 'Cancel', icon: Icons.cancel);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(
+          item.icon,
+          color: Colors.white,
+          size: 22,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(
+          item.text,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static onChanged(BuildContext context, MenuItem item) {
+    switch (item) {
+      case MenuItems.like:
+      //Do something
+        break;
+      case MenuItems.flag:
+      //Do something
+        break;
+      case MenuItems.youtube:
+      //Do something
+        break;
+      case MenuItems.album:
+      //Do something
+        break;
+      case MenuItems.cancel:
+      //Do something
+        break;
+    }
   }
 }

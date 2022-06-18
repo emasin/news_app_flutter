@@ -22,8 +22,6 @@ void main() async {
   bool isLightTheme = settings.get('isLightTheme') ?? false;
 
 
-
-
   runApp(
     /**
     ChangeNotifierProvider(
@@ -42,12 +40,6 @@ void main() async {
       )
 
   );
-
-
-
-
-
-
 
 
 }
@@ -78,12 +70,13 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     int count = Provider.of<Counter>(context).count;
     if(count == 0) {
+
+
       SSEClient.subscribeToSSE(
           url:
           'https://reward-api.staging.newming.io/api/newming/deploy/listen',
           header: {
             "Accept": "text/event-stream",
-            "Keep-Alive": "timeout=5, max=1000",
             "Cache-Control": "no-cache",
           }).listen((event) {
         print('Id: ' + event.id!);
@@ -92,6 +85,9 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
 
         this.counter.increment();
+      }, onError: (error) {
+            print('main ${error}' );
+            this.counter.init();
       });
     }
 

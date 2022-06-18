@@ -108,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final count  =Provider.of<Counter>(context).count;
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle:
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
-              'Supporters ${Provider.of<Counter>(context).count}',
+              'Supporters ${count}',
               style: TextStyle(color: Color(0xffFCAF38)),
             )
           ],
@@ -170,13 +171,14 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : _articleExists
               ? RefreshIndicator(
+                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),
                     itemCount: articles.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return NewsTile(
+                      return articles.length-1 != index ?NewsTile(
                         uid:  articles[index].uid,
                         image: articles[index].image,
                         title: articles[index].title,
@@ -184,6 +186,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         date: articles[index].published_at,
                         fullArticle: articles[index].fullArticle,
                         tags:articles[index].tags,
+                      ) : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+
+                            TextButton(
+                              child: Text('Retry Now!'),
+                              onPressed: () {
+
+                                  if(count > 1) {
+                                    setState(() {
+                                      _retryBtnDisabled = true;
+                                    });
+                                    getNews();
+                                  }
+
+                              },
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),

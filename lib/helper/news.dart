@@ -10,14 +10,15 @@ class News {
 
   Future getNews({String? category}) async {
     String kDailyhuntEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news?size=30';
+        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50';
     String kinshortsEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news?size=30';
+        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50';
 
     http.Client client = http.Client();
     http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
 
     if (response.statusCode == 200) {
+      print(response.statusCode);
       var jsonData = jsonDecode(response.body);
 
 
