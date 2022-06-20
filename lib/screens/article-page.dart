@@ -49,7 +49,9 @@ class _ArticlePageState extends State<ArticlePage> {
 
       if (response.statusCode == HttpStatus.ok) {
         var jsonData = jsonDecode(response.body);
+
         result = jsonData[0]["content"];
+
       } else {
         print('Something went wrong!');
       }
@@ -60,10 +62,21 @@ class _ArticlePageState extends State<ArticlePage> {
     return result;
   }
 
-  void _articleShare(String uid) async {
-    var url = 'https://newming.io/share/article/${uid}';
+  void _articleShare(String uid,String title) async {
 
-    await Share.share(url, subject: widget.article.title);
+    String kinshortsEndpoint =
+        'https://news-api.newming.io/v1/articles/${uid}/link';
+    http.Client client = http.Client();
+    http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      var text = '${title} ${jsonData["data"]["link"]}';
+      await Share.share(text, subject: title);
+    }
+
+
+
+
   }
 
   @override
@@ -109,7 +122,7 @@ class _ArticlePageState extends State<ArticlePage> {
           setState(() => _menuVisible = displaying);
         },
         child: Scaffold(
-          backgroundColor: themeProvider.themeMode().backgroundColor,
+          backgroundColor: themeProvider.themeMode().toggleBackgroundColor,
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -129,10 +142,12 @@ class _ArticlePageState extends State<ArticlePage> {
                       blendMode: BlendMode.darken,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.amber,
+
+                          color: themeProvider.themeMode().backgroundColor,
                           image: DecorationImage(
                             image: NetworkImage(widget.article.featuredImage),
                             fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
                           ),
                         ),
                       ),
@@ -140,7 +155,7 @@ class _ArticlePageState extends State<ArticlePage> {
                     Transform.translate(
                       offset: const Offset(
                         0,
-                        100,
+                        200,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -234,9 +249,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     ),
                                   ),
                                   child: GestureDetector(
-                                      onTap: () {
-                                        _articleShare(widget.article.uid);
-                                      },
+
                                       child: Row(
                                         children: [
                                           Icon(
@@ -269,6 +282,7 @@ class _ArticlePageState extends State<ArticlePage> {
                         child: GestureDetector(
                             child: Column(children: [
                               Container(
+
                                 decoration: BoxDecoration(
                                   color: themeProvider
                                       .themeMode()
@@ -290,11 +304,32 @@ class _ArticlePageState extends State<ArticlePage> {
                                         future: _fetch1(),
                                         builder: (context, snapshot) {
                                           List<String?>? paragraphs2 = [];
+                                          List<String?>? paragraphs3 = [];
                                           if (snapshot.hasData) {
                                             //var photos = jsonData[0]["photos"];
-
-                                            paragraphs2 = snapshot.data
+                                            String? text = snapshot.data?.replaceAll("%PHOTO%", "%NEW_LINE% %PHOTO% %NEW_LINE%");
+                                            paragraphs2 = text
                                                 ?.split('%NEW_LINE%');
+
+                                            int photo_index = 0;
+                                            paragraphs2?.forEach((element) {
+                                              String str = element.toString().trim();
+                                              if(str.length > 0){
+
+
+                                                if(str == '%PHOTO%') {
+                                                  print(str.startsWith('%PHOTO'));
+                                                  if(photo_index != 0) {
+                                                    paragraphs3.add('$element$photo_index');
+                                                  }
+                                                  photo_index++;
+                                                }else {
+                                                  paragraphs3.add(element);
+                                                }
+
+                                              }
+                                            });
+
                                           } else if (snapshot.hasError) {
                                             print(snapshot.data); // null
                                             print(snapshot
@@ -311,7 +346,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
                                           return ListView.builder(
                                             shrinkWrap: true,
-                                            itemCount: paragraphs2?.length,
+                                            itemCount: paragraphs3?.length,
                                             physics: _menuVisible
                                                 ? const NeverScrollableScrollPhysics()
                                                 : const BouncingScrollPhysics(),
@@ -389,48 +424,65 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         ),
                                                       ),
                                                       PieAction(
-                                                        tooltip: 'Comment',
+                                                        tooltip: 'Youtube',
                                                         child: const Icon(
-                                                            Icons.comment),
+                                                            Icons.play_circle_outline),
                                                         onSelect: () =>
                                                             showSnackBar(
-                                                                'Comment #$index',
+                                                                'Play #$index',
                                                                 context),
+                                                        buttonTheme:
+                                                        PieButtonTheme(
+                                                          backgroundColor:
+                                                          Colors
+                                                              .red[700],
+                                                        ),
                                                       ),
                                                       PieAction(
-                                                        tooltip: 'Save',
+                                                        tooltip: '!가장중요한',
                                                         child: const Icon(
-                                                            Icons.save),
+                                                            Icons.flag),
                                                         onSelect: () =>
                                                             showSnackBar(
-                                                                'Save #$index',
+                                                                'Flag #$index',
+                                                                context),
+                                                        buttonTheme:
+                                                        PieButtonTheme(
+                                                          backgroundColor:
+                                                          Colors
+                                                              .orange[700],
+                                                        ),
+                                                      ),
+                                                      PieAction(
+                                                        tooltip: 'Photos & Files',
+                                                        child: const Icon(
+                                                            Icons.attach_file),
+                                                        onSelect: () =>
+                                                            showSnackBar(
+                                                                'Attach #$index',
                                                                 context),
                                                       ),
                                                       PieAction(
                                                         tooltip: 'Share',
                                                         child: const Icon(
                                                             Icons.share),
-                                                        onSelect: () =>
-                                                            showSnackBar(
-                                                                'Share #$index',
-                                                                context),
+                                                        onSelect: () {
+                                                          _articleShare(
+                                                              widget.article
+                                                                  .uid,
+                                                              paragraphs3![index]
+                                                                  .toString());
+                                                        }
                                                       ),
                                                     ],
                                                     child: GestureDetector(
-                                                        onTap: _menuVisible
-                                                            ? null
-                                                            : () =>
-                                                                showSnackBar(
-                                                                  'Tap #$index (Long press to display Pie Menu)',
-                                                                  context,
-                                                                ),
+
                                                         onLongPress: () {
-                                                          print(paragraphs2![
-                                                                  index]
-                                                              .toString());
+
                                                         },
                                                         child: HtmlWidget(
-                                                          paragraphs2![index]
+                                                          paragraphs3![index]
+                                                              .toString().trim().startsWith('%PHOTO%') ? '<img src="https://lawngtlai.nic.in/wp-content/themes/district-theme-2/images/news.jpg">' : paragraphs3![index]
                                                               .toString(),
                                                           textStyle: TextStyle(
                                                               color: themeProvider
@@ -442,7 +494,9 @@ class _ArticlePageState extends State<ArticlePage> {
                                             },
                                           );
                                         },
-                                      )
+                                      ), SizedBox(
+                                        height: size.height * 0.1,
+                                      ),
                                     ],
                                   ),
                                 ),

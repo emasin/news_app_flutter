@@ -8,18 +8,22 @@ import '../constants.dart';
 class News {
   List<Article> news = [];
 
-  Future getNews({String? category}) async {
+  Future getNews({String? category, required int page}) async {
+    if(page ==0 )
+      page = 1;
+
     String kDailyhuntEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50';
+        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50&page=${page}';
     String kinshortsEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50';
+        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50&page=${page}';
+
+
 
     http.Client client = http.Client();
     http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
 
-    if (response.statusCode == 200) {
-      print(response.statusCode);
-      var jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
 
 
       if (jsonData.length > 0) {

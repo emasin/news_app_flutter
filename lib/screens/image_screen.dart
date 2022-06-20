@@ -107,6 +107,7 @@ class _ImageScreenState extends State<ImageScreen>
               child: GestureDetector(
                 onDoubleTapDown: _handleDoubleTapDown,
                 onDoubleTap: _handleDoubleTap,
+                onTap: () {Navigator.pop(context);},
                 child: InteractiveViewer(
                   child: Hero(
                     tag: 'image-${widget.imageUrl}',

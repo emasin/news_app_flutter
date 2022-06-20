@@ -22,7 +22,7 @@ dependencies:
   transition: ^2.0.2
   fluttertoast: ^8.0.8
   url_launcher: ^6.0.12
-  share_plus: ^3.0.4
+  share_plus: ^4.0.8
   cupertino_icons: ^1.0.2
   platform: ^3.1.0
   timeago: ^3.1.0

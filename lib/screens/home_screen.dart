@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Color baseColor = Colors.grey[300]!;
   Color highlightColor = Colors.grey[100]!;
 
+  int page = 1;
   @override
   void initState() {
     super.initState();
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _loading = true;
     checkConnectivity();
     News newsClass = News();
-    await newsClass.getNews(category: widget.category);
+    await newsClass.getNews(category: widget.category,page:page);
     articles = newsClass.news;
     setState(() {
       if (articles.isEmpty) {
@@ -192,15 +193,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
 
                             TextButton(
-                              child: Text('Retry Now!'),
+                              child: Text('Next Articles'),
                               onPressed: () {
 
-                                  if(count > 1) {
+
                                     setState(() {
+                                      page++;
                                       _retryBtnDisabled = true;
                                     });
                                     getNews();
-                                  }
+
 
                               },
                             ),
@@ -209,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
-                  onRefresh: () => getNews(),
+                  onRefresh: (){page = 0; return getNews();},
                 )
               : Container(
                   child: Center(

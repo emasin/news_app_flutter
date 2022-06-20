@@ -45,6 +45,7 @@ class NewsTile extends StatelessWidget {
                 child: Hero(
                   tag: 'image-$image',
                   child: CachedNetworkImage(
+                    alignment: Alignment.center,
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
