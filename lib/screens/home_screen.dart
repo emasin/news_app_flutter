@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
 
                             TextButton(
-                              child: Text('Next Articles'),
+                              child: Text('더 보기'),
                               onPressed: () {
 
 

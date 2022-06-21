@@ -153,9 +153,9 @@ class _ArticlePageState extends State<ArticlePage> {
                       ),
                     ),
                     Transform.translate(
-                      offset: const Offset(
+                      offset:  Offset(
                         0,
-                        200,
+                        (size.height * 2) / 10,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
