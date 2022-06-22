@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
-                  onRefresh: (){page = 0; return getNews();},
+                  onRefresh: (){page = 1; return getNews();},
                 )
               : Container(
                   child: Center(

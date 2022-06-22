@@ -82,7 +82,12 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   void initState() {
     super.initState();
+    myController.addListener(_printLatestValue);
     getTheme();
+  }
+
+  void _printLatestValue() {
+    print('Second text field: ${myController.text}');
   }
 
   Icon themeIcon = Icon(Icons.dark_mode);
@@ -104,13 +109,22 @@ class _ArticlePageState extends State<ArticlePage> {
   bool emojiShowing = false;
 
   _onEmojiSelected(Emoji emoji) {
-
+    Navigator.pop(context, "This string will be passed back to the parent",);
   }
 
   _onBackspacePressed() {
 
   }
-
+  final myController = TextEditingController();
+  final _formKey=GlobalKey<FormState>();
+  final focus = FocusNode();
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    myController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +132,9 @@ class _ArticlePageState extends State<ArticlePage> {
     Size size = MediaQuery.of(context).size;
     bool _menuVisible = false;
     return PieCanvas(
+      theme: PieTheme(overlayColor:themeProvider.themeMode().backgroundColor,
+
+      ),
         onMenuToggle: (displaying) {
           setState(() => _menuVisible = displaying);
         },
@@ -427,10 +444,103 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         tooltip: 'Youtube',
                                                         child: const Icon(
                                                             Icons.play_circle_outline),
-                                                        onSelect: () =>
-                                                            showSnackBar(
-                                                                'Play #$index',
-                                                                context),
+                                                        onSelect: () => {
+                                                          showModalBottomSheet<
+                                                              void>(
+                                                            isScrollControlled:true,
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                            context) {
+                                                              return Padding(
+                                                                  padding: MediaQuery.of(context).viewInsets,
+                                                                  child:Container(
+                                                                height: 250,
+                                                                color: baseColor,
+                                                                child: Center(
+                                                                  child: Center(
+
+                                                                      child:  Form(
+                                                                          key: _formKey,
+                                                                          child: Column(
+                                                                            children: [
+                                                                              Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                              child:TextFormField(
+                                                                                  validator: (value){
+                                                                                    if(value!.isEmpty){
+                                                                                      return '입력해주세요';
+                                                                                    }else{
+                                                                                      return null;
+                                                                                    }
+                                                                                  },
+
+                                                                                  keyboardType: TextInputType.url,
+
+                                                                                  textInputAction: TextInputAction.next,
+                                                                                  autofocus: true,
+
+                                                                                  decoration: InputDecoration(
+                                                                                    border: OutlineInputBorder(),
+                                                                                    labelText: 'Youtube URL',
+                                                                                    contentPadding: EdgeInsets.all(10),
+
+
+
+                                                                                  )
+                                                                                      
+                                                                              ),
+                                                                              ),
+                                                                            Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                              child:
+                                                                              TextFormField(
+                                                                                  validator: (value){
+                                                                                    if(value!.isEmpty ){
+                                                                                      return '입력해주세요';
+                                                                                    }else{
+                                                                                      return null;
+                                                                                    }
+                                                                                  },
+
+                                                                                  focusNode: focus,
+
+                                                                                  enableInteractiveSelection:true,
+                                                                                  maxLines:2,
+                                                                                  maxLength: 100,
+                                                                                  decoration: InputDecoration(
+                                                                                    border: OutlineInputBorder(),
+                                                                                    labelText: 'Description',
+                                                                                  )
+                                                                              )),
+
+                                                                              Center(child:Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                                  child:ElevatedButton(style: ElevatedButton.styleFrom(
+                                                                                    // background color
+
+                                                                                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                                                                    textStyle: const TextStyle(fontSize: 20),
+                                                                                    primary:themeProvider
+                                                                                      .themeMode()
+                                                                                      .toggleBackgroundColor
+                                                                                  ),
+
+
+
+                                                                                onPressed: (){
+                                                                                  Navigator.pop(context, "This string will be passed back to the parent",);
+                                                                                },
+                                                                                child: Text("Submit",style: TextStyle(color: themeProvider
+                                                                                    .themeMode()
+                                                                                    .textColor),),
+                                                                              )))
+
+
+                                                                            ],
+                                                                          ))),
+                                                                ),
+                                                              ));
+                                                            },
+                                                          )
+                                                        },
                                                         buttonTheme:
                                                         PieButtonTheme(
                                                           backgroundColor:
