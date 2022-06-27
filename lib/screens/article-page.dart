@@ -39,15 +39,23 @@ class _ArticlePageState extends State<ArticlePage> {
     'Item8',
   ];
   String? selectedValue;
+  bool isLoading = false;
+
+  Future<List<Paragraph>>? _contentList;
 
   Future<List<Paragraph>> _fetch1() async {
+
+    if(isLoading)
+      return [];
+
     var url = 'https://reward-api.newming.io/v2/api/interest/recent/news/' +
         widget.article.uid;
-    print(url);
+
     String result = 'loading.. $url';
 
     List<Paragraph> list = [];
     try {
+      isLoading = true;
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == HttpStatus.ok) {
         var jsonData = jsonDecode(response.body);
@@ -67,6 +75,8 @@ class _ArticlePageState extends State<ArticlePage> {
       print(url + " " + exception.toString());
       list = [];
       return list;
+    } finally {
+      isLoading = false;
     }
 
     return list;
@@ -92,6 +102,7 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   void initState() {
     super.initState();
+    _contentList  = _fetch1();
     myController.addListener(_printLatestValue);
     getTheme();
   }
@@ -138,9 +149,11 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
+
     final themeProvider = Provider.of<ThemeProvider>(context);
     Size size = MediaQuery.of(context).size;
     bool _menuVisible = false;
+    print(size.height * 0.35);
     return PieCanvas(
       theme: PieTheme(overlayColor:themeProvider.themeMode().backgroundColor,
 
@@ -153,7 +166,7 @@ class _ArticlePageState extends State<ArticlePage> {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                collapsedHeight: size.height * 0.3,
+                collapsedHeight: 260,
                 backgroundColor: Colors.transparent,
                 flexibleSpace: Stack(
                   children: [
@@ -171,11 +184,7 @@ class _ArticlePageState extends State<ArticlePage> {
                         decoration: BoxDecoration(
 
                           color: themeProvider.themeMode().backgroundColor,
-                          image: DecorationImage(
-                            image: NetworkImage(widget.article.featuredImage),
-                            fit: BoxFit.cover,
-                            alignment: Alignment.topCenter,
-                          ),
+
                         ),
                       ),
                     ),
@@ -314,9 +323,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                   color: themeProvider
                                       .themeMode()
                                       .toggleBackgroundColor,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30)),
+
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -326,35 +333,12 @@ class _ArticlePageState extends State<ArticlePage> {
                                     children: [
 
                                       FutureBuilder<List<Paragraph>>(
-                                        future: _fetch1(),
+                                        future: _contentList,
                                         builder: (context, snapshot) {
                                           List<String?>? paragraphs2 = [];
                                           List<Paragraph>? paragraphs3 = [];
                                           if (snapshot.hasData) {
-                                            /**
-                                            String? text = snapshot.data?.replaceAll("%PHOTO%", "%NEW_LINE% %PHOTO% %NEW_LINE%");
-                                            paragraphs2 = text
-                                                ?.split('%NEW_LINE%');
 
-                                            int photo_index = 0;
-                                            paragraphs2?.forEach((element) {
-                                              String str = element.toString().trim();
-                                              if(str.length > 0){
-
-
-                                                if(str == '%PHOTO%') {
-                                                  print(str.startsWith('%PHOTO'));
-                                                  if(photo_index != 0) {
-                                                    paragraphs3.add('$element$photo_index');
-                                                  }
-                                                  photo_index++;
-                                                }else {
-                                                  paragraphs3.add(element);
-                                                }
-
-                                              }
-                                            });
-                                                **/
                                             paragraphs3  = snapshot.data;
 
 
@@ -600,7 +584,18 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         onLongPress: () {
 
                                                         },
-                                                        child: HtmlWidget(
+                                                        child: paragraphs3![index].type  == 'photo' ? Center(child: Column(children: [
+                                                          HtmlWidget(
+                                                            '<img src="${paragraphs3![index].src}">',
+                                                            textStyle: TextStyle(
+                                                                color: themeProvider
+                                                                    .themeMode()
+                                                                    .textColor,
+                                                                fontSize: 16),
+                                                          ),Text(paragraphs3![index].desc,style: TextStyle(color: themeProvider
+                                                              .themeMode()
+                                                              .imageDescTextColor))
+                                                        ],)) :  HtmlWidget(
                                                           paragraphs3![index].type  == 'photo' ? '<img src="${paragraphs3![index].src}">' : paragraphs3![index].text,
                                                           textStyle: TextStyle(
                                                               color: themeProvider
@@ -612,9 +607,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                             },
                                           );
                                         },
-                                      ), SizedBox(
-                                        height: size.height * 0.1,
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),

@@ -61,6 +61,7 @@ class ThemeProvider with ChangeNotifier {
   ThemeColor themeMode() {
     return ThemeColor(
       textColor: isLightTheme ? Color(0xFF000000) : Color(0xFFFFFFFF),
+      imageDescTextColor: isLightTheme ? Color(0xAA000000) : Color(0xAAAAAAAA),
       toggleButtonColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFf34323d),
       toggleBackgroundColor:
           isLightTheme ? Color(0xFFe7e7e8) : Color(0xFF222029),
@@ -87,6 +88,7 @@ class ThemeProvider with ChangeNotifier {
 class ThemeColor {
   Color backgroundColor;
   Color toggleButtonColor;
+  Color imageDescTextColor;
   Color toggleBackgroundColor;
   Color textColor;
   List<BoxShadow> shadow;
@@ -97,5 +99,6 @@ class ThemeColor {
     required this.toggleButtonColor,
     required this.textColor,
     required this.shadow,
+    required this.imageDescTextColor
   });
 }
