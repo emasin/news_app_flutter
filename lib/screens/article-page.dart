@@ -594,9 +594,9 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                 fontSize: 16),
                                                           ),Text(paragraphs3![index].desc,style: TextStyle(color: themeProvider
                                                               .themeMode()
-                                                              .imageDescTextColor))
+                                                              .imageDescTextColor,fontSize: 14))
                                                         ],)) :  HtmlWidget(
-                                                          paragraphs3![index].type  == 'photo' ? '<img src="${paragraphs3![index].src}">' : paragraphs3![index].text,
+                                                           paragraphs3![index].text,
                                                           textStyle: TextStyle(
                                                               color: themeProvider
                                                                   .themeMode()
