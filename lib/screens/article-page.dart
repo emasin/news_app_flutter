@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:news_app/models/news.dart';
+import 'package:news_app/models/Paragraph.dart';
 import 'package:news_app/data/example_data.dart' as Example;
 import 'package:timeago/timeago.dart' as timego;
 import 'package:news_app/paltte.dart';
@@ -39,27 +40,36 @@ class _ArticlePageState extends State<ArticlePage> {
   ];
   String? selectedValue;
 
-  Future<String> _fetch1() async {
+  Future<List<Paragraph>> _fetch1() async {
     var url = 'https://reward-api.newming.io/v2/api/interest/recent/news/' +
         widget.article.uid;
+    print(url);
+    String result = 'loading.. $url';
 
-    String result = 'loading..';
+    List<Paragraph> list = [];
     try {
       var response = await http.get(Uri.parse(url));
-
       if (response.statusCode == HttpStatus.ok) {
         var jsonData = jsonDecode(response.body);
 
-        result = jsonData[0]["content"];
+        for(var  o in jsonData){
+          Paragraph p = Paragraph.fromJson(o);
+          list.add(p);
+        }
+
+
+        //result = jsonData[0]["content"];
 
       } else {
-        print('Something went wrong!');
+        print('Something went wrong! ');
       }
-    } catch (exception) {
-      return exception.toString();
+    } catch (exception){
+      print(url + " " + exception.toString());
+      list = [];
+      return list;
     }
 
-    return result;
+    return list;
   }
 
   void _articleShare(String uid,String title) async {
@@ -143,7 +153,7 @@ class _ArticlePageState extends State<ArticlePage> {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                collapsedHeight: size.height * 0.4,
+                collapsedHeight: size.height * 0.3,
                 backgroundColor: Colors.transparent,
                 flexibleSpace: Stack(
                   children: [
@@ -172,7 +182,7 @@ class _ArticlePageState extends State<ArticlePage> {
                     Transform.translate(
                       offset:  Offset(
                         0,
-                        (size.height * 2) / 10,
+                        (size.height * 2) / 25,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -310,20 +320,18 @@ class _ArticlePageState extends State<ArticlePage> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
+                                    horizontal: 10,
                                   ),
                                   child: Column(
                                     children: [
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      FutureBuilder<String>(
+
+                                      FutureBuilder<List<Paragraph>>(
                                         future: _fetch1(),
                                         builder: (context, snapshot) {
                                           List<String?>? paragraphs2 = [];
-                                          List<String?>? paragraphs3 = [];
+                                          List<Paragraph>? paragraphs3 = [];
                                           if (snapshot.hasData) {
-                                            //var photos = jsonData[0]["photos"];
+                                            /**
                                             String? text = snapshot.data?.replaceAll("%PHOTO%", "%NEW_LINE% %PHOTO% %NEW_LINE%");
                                             paragraphs2 = text
                                                 ?.split('%NEW_LINE%');
@@ -346,6 +354,9 @@ class _ArticlePageState extends State<ArticlePage> {
 
                                               }
                                             });
+                                                **/
+                                            paragraphs3  = snapshot.data;
+
 
                                           } else if (snapshot.hasError) {
                                             print(snapshot.data); // null
@@ -580,8 +591,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                           _articleShare(
                                                               widget.article
                                                                   .uid,
-                                                              paragraphs3![index]
-                                                                  .toString());
+                                                              paragraphs3![index]!.text);
                                                         }
                                                       ),
                                                     ],
@@ -591,9 +601,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
                                                         },
                                                         child: HtmlWidget(
-                                                          paragraphs3![index]
-                                                              .toString().trim().startsWith('%PHOTO%') ? '<img src="https://lawngtlai.nic.in/wp-content/themes/district-theme-2/images/news.jpg">' : paragraphs3![index]
-                                                              .toString(),
+                                                          paragraphs3![index].type  == 'photo' ? '<img src="${paragraphs3![index].src}">' : paragraphs3![index].text,
                                                           textStyle: TextStyle(
                                                               color: themeProvider
                                                                   .themeMode()
