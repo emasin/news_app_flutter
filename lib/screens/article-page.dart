@@ -129,7 +129,8 @@ class _ArticlePageState extends State<ArticlePage> {
 
   bool emojiShowing = false;
 
-  _onEmojiSelected(Emoji emoji) {
+  _onEmojiSelected(Emoji emoji,String hash) {
+    print('$hash ${widget.article.uid} ${emoji.emoji}');
     Navigator.pop(context, "This string will be passed back to the parent",);
   }
 
@@ -390,7 +391,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                       height: 250,
                                                                       child: EmojiPicker(
                                                                           onEmojiSelected: (Category category, Emoji emoji) {
-                                                                            _onEmojiSelected(emoji);
+                                                                            _onEmojiSelected(emoji,paragraphs3![index]!.hash);
                                                                           },
                                                                           onBackspacePressed: _onBackspacePressed,
                                                                           config: Config(
