@@ -17,6 +17,7 @@ import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants.dart';
 import '../models/ContributionAction.dart';
@@ -48,6 +49,25 @@ class _ArticlePageState extends State<ArticlePage> {
   Future<List<ContributionAction>>? _actionList;
   late List<ContributionAction> _list = [];
 
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _launchInWebViewOrVC(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(
+          headers: <String, String>{'my_header_key': 'my_header_value'}),
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
 
   _actionRequest({required String hash_key,required String content_hash_str,required int contribution_type,required String contribution_action_val }) async {
     String url = '${baseUrl}/v2/api/contribution/action';
@@ -689,15 +709,19 @@ class _ArticlePageState extends State<ArticlePage> {
 
                                                         onTap: (){
                                                          if(paragraphs3![index].children!.length > 0){
-                                                            print(paragraphs3![index].children![0].contribution_type);
-                                                            print(paragraphs3![index].children![0].contribution_action_val);
+                                                            if(paragraphs3![index].children![0].contribution_type == 2) {
+                                                              _launchInWebViewOrVC(Uri.parse(paragraphs3![index].children![0].contribution_action_val));
+                                                            }
+                                                            //print(paragraphs3![index].children![0].contribution_action_val);
                                                          }
 
                                                         },
-                                                        child:Container(decoration:BoxDecoration(
+                                                        child:Stack(children: [ Container(
+                                                            padding: EdgeInsets.only(bottom: paragraphs3![index].children!.length > 0 ?30:0),
+                                                            decoration:BoxDecoration(
                                                           border: Border.all(
-                                                            width: 1,
-                                                            color: paragraphs3![index].children!.length > 0 ?  Colors.white54 : Colors.transparent,
+                                                            width: 0,
+                                                            color: paragraphs3![index].children!.length > 0 ?  Colors.transparent : Colors.transparent,
 
                                                           ),
 
@@ -721,7 +745,15 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                   .themeMode()
                                                                   .textColor,
                                                               fontSize: 16),
-                                                        )) ),
+                                                        )) ,
+                                                          paragraphs3![index].children!.length > 0 ? Positioned(child:
+
+                                                          paragraphs3![index].children![0].contribution_type == 1 ? Text(paragraphs3![index].children![0].contribution_action_val,style: TextStyle(fontSize:22),) : Icon(Icons.play_circle,color: Colors.red,)
+
+                                                            ,right: 10,bottom: 5,) :
+                                                              SizedBox()
+                                                    ])
+                                                    ),
                                                   ));
                                             },
                                           );

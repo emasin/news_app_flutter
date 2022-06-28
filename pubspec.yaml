@@ -21,7 +21,7 @@ dependencies:
   path_provider: ^2.0.2
   transition: ^2.0.2
   fluttertoast: ^8.0.8
-  url_launcher: ^6.0.12
+  url_launcher: ^6.1.4
   share_plus: ^4.0.8
   cupertino_icons: ^1.0.2
   platform: ^3.1.0
