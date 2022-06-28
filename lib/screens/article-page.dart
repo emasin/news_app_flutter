@@ -18,6 +18,9 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
+import '../constants.dart';
+import '../models/ContributionAction.dart';
+
 class ArticlePage extends StatefulWidget {
   const ArticlePage({Key? key, required this.article}) : super(key: key);
 
@@ -42,13 +45,90 @@ class _ArticlePageState extends State<ArticlePage> {
   bool isLoading = false;
 
   Future<List<Paragraph>>? _contentList;
+  Future<List<ContributionAction>>? _actionList;
+  late List<ContributionAction> _list = [];
+
+
+  _actionRequest({required String hash_key,required String content_hash_str,required int contribution_type,required String contribution_action_val }) async {
+    String url = '${baseUrl}/v2/api/contribution/action';
+
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: <String, String> {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: <String, String> {
+        'hash_key': hash_key,
+        'content_hash_str': content_hash_str,
+        'contribution_type': contribution_type.toString(),
+        'contribution_action_val': contribution_action_val,
+      },
+    );
+
+    late SnackBar snackBar = SnackBar(
+        content: Text(
+          response.statusCode.toString(),
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red);
+
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      snackBar = SnackBar(
+          content: Text(
+            response.statusCode.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+  }
+
+
+  Future<List<ContributionAction>> _fetch2() async {
+
+
+    var url = '${baseUrl}/v2/api/contribution/action/history/' +
+        widget.article.uid;
+
+
+    String result = 'loading.. $url';
+
+    List<ContributionAction> list = [];
+    try {
+
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == HttpStatus.ok) {
+        var jsonData = jsonDecode(response.body);
+
+        for(var  o in jsonData["actions"]){
+          ContributionAction p = ContributionAction.fromJson(o);
+          list.add(p);
+          _list.add(p);
+        }
+
+      } else {
+        print('Something went wrong! ');
+      }
+    } catch (exception){
+      print(url + " " + exception.toString());
+      list = [];
+      return list;
+    } finally {
+
+    }
+
+    return list;
+  }
 
   Future<List<Paragraph>> _fetch1() async {
 
     if(isLoading)
       return [];
 
-    var url = 'https://reward-api.newming.io/v2/api/interest/recent/news/' +
+    var url = '${baseUrl}/v2/api/interest/recent/news/' +
         widget.article.uid;
 
     String result = 'loading.. $url';
@@ -82,6 +162,7 @@ class _ArticlePageState extends State<ArticlePage> {
     return list;
   }
 
+
   void _articleShare(String uid,String title) async {
 
     String kinshortsEndpoint =
@@ -103,6 +184,17 @@ class _ArticlePageState extends State<ArticlePage> {
   void initState() {
     super.initState();
     _contentList  = _fetch1();
+    _actionList = _fetch2();
+
+    _actionList?.then((val) {
+      _list = val;
+    }).catchError((error) {
+      // error가 해당 에러를 출력
+      print('error: $error');
+    });
+
+
+
     myController.addListener(_printLatestValue);
     getTheme();
   }
@@ -132,6 +224,8 @@ class _ArticlePageState extends State<ArticlePage> {
   _onEmojiSelected(Emoji emoji,String hash) {
     print('$hash ${widget.article.uid} ${emoji.emoji}');
     Navigator.pop(context, "This string will be passed back to the parent",);
+
+    _actionRequest(hash_key: widget.article.uid, contribution_action_val: emoji.emoji, contribution_type: 1, content_hash_str: hash);
   }
 
   _onBackspacePressed() {
@@ -343,6 +437,18 @@ class _ArticlePageState extends State<ArticlePage> {
                                             paragraphs3  = snapshot.data;
 
 
+
+
+                                            for(var p in paragraphs3!){
+
+                                              for(var a in _list!){
+                                                if(p.hash == a.content_hash_str){
+                                                  p.children?.add(a);
+                                                }
+                                              }
+                                            }
+
+
                                           } else if (snapshot.hasError) {
                                             print(snapshot.data); // null
                                             print(snapshot
@@ -441,6 +547,9 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         child: const Icon(
                                                             Icons.play_circle_outline),
                                                         onSelect: () => {
+
+
+
                                                           showModalBottomSheet<
                                                               void>(
                                                             isScrollControlled:true,
@@ -471,7 +580,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                   },
 
                                                                                   keyboardType: TextInputType.url,
-
+                                                                                  controller:myController,
                                                                                   textInputAction: TextInputAction.next,
                                                                                   autofocus: true,
 
@@ -518,18 +627,14 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                       .themeMode()
                                                                                       .toggleBackgroundColor
                                                                                   ),
-
-
-
                                                                                 onPressed: (){
+                                                                                  _actionRequest(hash_key: widget.article.uid, contribution_action_val: myController.text, contribution_type: 2, content_hash_str:paragraphs3![index]!.hash );
                                                                                   Navigator.pop(context, "This string will be passed back to the parent",);
                                                                                 },
                                                                                 child: Text("Submit",style: TextStyle(color: themeProvider
                                                                                     .themeMode()
                                                                                     .textColor),),
                                                                               )))
-
-
                                                                             ],
                                                                           ))),
                                                                 ),
@@ -582,10 +687,23 @@ class _ArticlePageState extends State<ArticlePage> {
                                                     ],
                                                     child: GestureDetector(
 
-                                                        onLongPress: () {
+                                                        onTap: (){
+                                                         if(paragraphs3![index].children!.length > 0){
+                                                            print(paragraphs3![index].children![0].contribution_type);
+                                                            print(paragraphs3![index].children![0].contribution_action_val);
+                                                         }
 
                                                         },
-                                                        child: paragraphs3![index].type  == 'photo' ? Center(child: Column(children: [
+                                                        child:Container(decoration:BoxDecoration(
+                                                          border: Border.all(
+                                                            width: 1,
+                                                            color: paragraphs3![index].children!.length > 0 ?  Colors.white54 : Colors.transparent,
+
+                                                          ),
+
+
+                                                        ),
+                                                        child:paragraphs3![index].type  == 'photo' ? Center(child: Column(children: [
                                                           HtmlWidget(
                                                             '<img src="${paragraphs3![index].src}">',
                                                             textStyle: TextStyle(
@@ -593,17 +711,17 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                     .themeMode()
                                                                     .textColor,
                                                                 fontSize: 16),
-                                                          ),Text(paragraphs3![index].desc,style: TextStyle(color: themeProvider
+                                                          ),Text('${paragraphs3![index].desc}',style: TextStyle(color: themeProvider
                                                               .themeMode()
                                                               .imageDescTextColor,fontSize: 14))
                                                         ],)) :  HtmlWidget(
-                                                           paragraphs3![index].text,
+                                                          '${paragraphs3![index].text}',
                                                           textStyle: TextStyle(
                                                               color: themeProvider
                                                                   .themeMode()
                                                                   .textColor,
                                                               fontSize: 16),
-                                                        )),
+                                                        )) ),
                                                   ));
                                             },
                                           );

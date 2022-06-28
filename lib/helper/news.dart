@@ -13,9 +13,9 @@ class News {
       page = 1;
 
     String kDailyhuntEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50&page=${page}';
+        '${baseUrl}/v2/api/interest/recent/news?size=50&page=${page}';
     String kinshortsEndpoint =
-        'https://reward-api.newming.io/v2/api/interest/recent/news?size=50&page=${page}';
+        '${baseUrl}/v2/api/interest/recent/news?size=50&page=${page}';
 
 
 

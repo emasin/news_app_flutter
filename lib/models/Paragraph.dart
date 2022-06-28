@@ -1,10 +1,12 @@
+import 'ContributionAction.dart';
+
 class Paragraph {
   final String src;
   final String desc;
   final String type;
   final String hash;
   final String text;
-
+  List<ContributionAction>? children = [];
   Paragraph({required this.src, required this.desc, required  this.type, required this.hash,required this.text});
 
   factory Paragraph.fromJson(Map<String, dynamic> json) {
