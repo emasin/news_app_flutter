@@ -1,13 +1,17 @@
+const kNewsImage =
+    'https://eoienglish.es/images/2021/03/10/news-1644696_1280.png';
+
 const kAllImage =
-    'https://lawngtlai.nic.in/wp-content/themes/district-theme-2/images/news.jpg';
-const kScienceImage =
-    'https://images.unsplash.com/photo-1554475901-4538ddfbccc2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1504&q=80';
-const kTechnologyImage =
-    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80';
-const kIndiaImage =
-    'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80';
-const kAutomobileImage =
-    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=802&q=80';
+    'https://miro.medium.com/max/1400/1*PNBzVeucHWh68LdTukOJLw.png';
+
+const kYoutubeImage =
+    'https://t1.daumcdn.net/cfile/tistory/992662335A0E948F07';
+const kEmojiImage =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOWDVBMhMNaNe999mmKuhVM8DnENe2croBIw&usqp=CAU';
+const kImportantImage =
+    'https://creativouae.com/wp-content/uploads/2020/03/Important.jpg';
+const kShareImage =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-LBdmVaCLmwmz7E3_FCufYAybTEd88KX7pA&usqp=CAU';
 const kEntertainmetImage =
     'https://images.unsplash.com/photo-1583512130600-6f201806dd3c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=588&q=80';
 const kSportsImage =

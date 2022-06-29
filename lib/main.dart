@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
     return MaterialApp(
       theme: themeProvider.themeData(),
-      home: HomeScreen(category: 'all'),
+      home: HomeScreen(category: '0'),
     );
   }
 }

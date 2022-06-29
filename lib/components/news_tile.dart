@@ -4,11 +4,12 @@ import 'package:news_app/constants.dart';
 import 'package:news_app/models/news.dart';
 import 'package:news_app/screens/image_screen.dart';
 import 'package:transition/transition.dart';
-
+import 'package:timeago/timeago.dart' as timego;
 import '../screens/article-page.dart';
 
 class NewsTile extends StatelessWidget {
   final String image, title, content, date, fullArticle,tags,uid;
+  final bool hasStory;
   NewsTile({
     required this.uid,
     required this.content,
@@ -16,11 +17,13 @@ class NewsTile extends StatelessWidget {
     required this.image,
     required this.title,
     required this.fullArticle,
-    required this.tags
+    required this.tags,
+    required this.hasStory
   });
 
   @override
   Widget build(BuildContext context) {
+    print(hasStory);
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6))),
@@ -44,19 +47,22 @@ class NewsTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
                 child: Hero(
                   tag: 'image-$image',
-                  child: CachedNetworkImage(
-                    alignment: Alignment.center,
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                    imageUrl: image == "" ? kAllImage : image,
-                    placeholder: (context, url) => Image(
-                      image: AssetImage('images/dotted-placeholder.jpg'),
+                  child: Stack(children: [
+                    CachedNetworkImage(
+                      alignment: Alignment.center,
                       height: 200,
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
+                      imageUrl: image == "" ? kNewsImage : image,
+                      placeholder: (context, url) => Image(
+                        image: AssetImage('images/dotted-placeholder.jpg'),
+                        height: 200,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
+                   hasStory ? Positioned(child: Icon(Icons.interests_outlined,size: 30,color: Colors.orangeAccent,),left: 0,) : SizedBox()
+                  ],),
                 ),
               ),
               onTap: () {
@@ -88,17 +94,11 @@ class NewsTile extends StatelessWidget {
                     SizedBox(
                       height: 6,
                     ),
-                    Text(
-                      tags,
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
+
+                    Text(timego.format(
+                      DateTime.parse(date),
+                      locale: 'en',
                     ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(date,
                         style: TextStyle(color: Colors.grey, fontSize: 12.0))
                   ],
                 ),

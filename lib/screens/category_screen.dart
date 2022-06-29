@@ -93,7 +93,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             size: 30,
           ),
         ),
-        title: Text('Categories'),
+        title: Text('Stories'),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),

@@ -12,6 +12,7 @@ class Article {
   String publishedDate;
   String fullArticle;
   String type;
+  bool hasStory;
 
   Article(
       {required this.content,
@@ -26,5 +27,6 @@ class Article {
       required this.tags,
       required this.thumbnail,
       required this.type,
-      required this.uid});
+      required this.uid,
+      required this.hasStory});
 }

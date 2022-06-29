@@ -103,7 +103,7 @@ class _ArticlePageState extends State<ArticlePage> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+    _fetch2();
   }
 
 
@@ -126,12 +126,16 @@ class _ArticlePageState extends State<ArticlePage> {
         for(var  o in jsonData["actions"]){
           ContributionAction p = ContributionAction.fromJson(o);
           list.add(p);
-          _list.add(p);
+          //_list.add(p);
         }
 
       } else {
         print('Something went wrong! ');
       }
+      setState(() {
+        _list = list;
+      });
+
     } catch (exception){
       print(url + " " + exception.toString());
       list = [];
@@ -183,7 +187,7 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
 
-  void _articleShare(String uid,String title) async {
+  void _articleShare(String uid,String title,String hash) async {
 
     String kinshortsEndpoint =
         'https://news-api.newming.io/v1/articles/${uid}/link';
@@ -192,19 +196,26 @@ class _ArticlePageState extends State<ArticlePage> {
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       var text = '${title} ${jsonData["data"]["link"]}';
-      await Share.share(text, subject: title);
+      await Share.shareWithResult(text, subject: title).then((value) => _actionRequest(hash_key: uid, content_hash_str: hash, contribution_type: 6, contribution_action_val: title));
     }
 
 
 
 
   }
+  String tags = "";
 
   @override
   void initState() {
     super.initState();
     _contentList  = _fetch1();
     _actionList = _fetch2();
+
+    setState(() {
+      for(var t in widget.article.tags.split(',').map((v)=>'#${v} ')){
+        tags += t;
+      }
+    });
 
     _actionList?.then((val) {
       _list = val;
@@ -334,7 +345,7 @@ class _ArticlePageState extends State<ArticlePage> {
                             Row(
                               children: [
                                 Text(
-                                  widget.article.tags,
+                                  tags,
                                   style: TextStyle(
                                     fontSize: 18,
                                     height: 1.5,
@@ -674,9 +685,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         child: const Icon(
                                                             Icons.flag),
                                                         onSelect: () =>
-                                                            showSnackBar(
-                                                                'Flag #$index',
-                                                                context),
+                                                            _actionRequest(hash_key: widget.article.uid, contribution_action_val: '', contribution_type: 3, content_hash_str:paragraphs3![index]!.hash ),
                                                         buttonTheme:
                                                         PieButtonTheme(
                                                           backgroundColor:
@@ -701,7 +710,9 @@ class _ArticlePageState extends State<ArticlePage> {
                                                           _articleShare(
                                                               widget.article
                                                                   .uid,
-                                                              paragraphs3![index]!.text);
+                                                              paragraphs3![index]!.text,
+                                                            paragraphs3![index]!.hash,
+                                                          );
                                                         }
                                                       ),
                                                     ],
@@ -717,11 +728,11 @@ class _ArticlePageState extends State<ArticlePage> {
 
                                                         },
                                                         child:Stack(children: [ Container(
-                                                            padding: EdgeInsets.only(bottom: paragraphs3![index].children!.length > 0 ?30:0),
+                                                            padding: EdgeInsets.only(bottom: paragraphs3![index].children!.length > 0 ?30:0 ,top: paragraphs3![index].children!.length > 0 &&  paragraphs3![index].children![0].contribution_type == 3  ? 30 : 0),
                                                             decoration:BoxDecoration(
                                                           border: Border.all(
                                                             width: 0,
-                                                            color: paragraphs3![index].children!.length > 0 ?  Colors.transparent : Colors.transparent,
+                                                            color: paragraphs3![index].children!.length > 0 &&  paragraphs3![index].children![0].contribution_type == 3   ?  Colors.orangeAccent : Colors.transparent,
 
                                                           ),
 
@@ -729,7 +740,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         ),
                                                         child:paragraphs3![index].type  == 'photo' ? Center(child: Column(children: [
                                                           HtmlWidget(
-                                                            '<img src="${paragraphs3![index].src}">',
+                                                            '<img src="${paragraphs3![index].src}" style="width:100%">',
                                                             textStyle: TextStyle(
                                                                 color: themeProvider
                                                                     .themeMode()
@@ -748,7 +759,10 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         )) ,
                                                           paragraphs3![index].children!.length > 0 ? Positioned(child:
 
-                                                          paragraphs3![index].children![0].contribution_type == 1 ? Text(paragraphs3![index].children![0].contribution_action_val,style: TextStyle(fontSize:22),) : Icon(Icons.play_circle,color: Colors.red,)
+                                                          paragraphs3![index].children![0].contribution_type == 1 ?
+                                                          Text(paragraphs3![index].children![0].contribution_action_val,style: TextStyle(fontSize:22),) :
+                                                          paragraphs3![index].children![0].contribution_type == 2 ?
+                                                          Icon(Icons.play_circle,color: Colors.red,) : Icon(Icons.flag,color: Colors.orangeAccent,)
 
                                                             ,right: 10,bottom: 5,) :
                                                               SizedBox()

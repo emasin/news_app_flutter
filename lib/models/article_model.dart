@@ -1,4 +1,4 @@
-class ArticleModel {
+class ArticleModel2 {
   String title;
   String image;
   String content;
@@ -7,7 +7,7 @@ class ArticleModel {
   String fullArticle;
   String pressName;
 
-  ArticleModel(
+  ArticleModel2(
       {required this.content,
       required this.fullArticle,
       required this.image,

@@ -139,8 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
-              'Supporters ${count}',
-              style: TextStyle(color: Color(0xffFCAF38)),
+              'Prime',
+              style: TextStyle(color: Colors.amber),
             )
           ],
         ),
@@ -187,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         date: articles[index].published_at,
                         fullArticle: articles[index].fullArticle,
                         tags:articles[index].tags,
+                        hasStory: articles[index].hasStory,
                       ) : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

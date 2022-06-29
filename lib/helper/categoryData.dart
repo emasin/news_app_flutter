@@ -3,7 +3,7 @@ import 'package:news_app/models/category_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 Future<List<CategoryModel>> getCategories()  async {
-
+/**
   String kinshortsEndpoint =
       'https://reward-api.newming.io/v2/api/ming/relation/my/16919';
 
@@ -31,6 +31,50 @@ Future<List<CategoryModel>> getCategories()  async {
 
 
 
+
+  return myCategories;
+    **/
+
+
+  List<CategoryModel> myCategories = [];
+  CategoryModel categoryModel;
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "Latest News";
+  categoryModel.imageAssetUrl = kNewsImage;
+  categoryModel.category = '0';
+  myCategories.add(categoryModel);
+
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "All";
+  categoryModel.imageAssetUrl = kAllImage;
+  categoryModel.category = '99';
+  myCategories.add(categoryModel);
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "Emoji";
+  categoryModel.imageAssetUrl = kEmojiImage;
+  categoryModel.category = '1';
+  myCategories.add(categoryModel);
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "Youtube";
+  categoryModel.imageAssetUrl = kYoutubeImage;
+  categoryModel.category = '2';
+  myCategories.add(categoryModel);
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "Important";
+  categoryModel.imageAssetUrl = kImportantImage;
+  categoryModel.category = '3';
+  myCategories.add(categoryModel);
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "Share";
+  categoryModel.imageAssetUrl = kShareImage;
+  categoryModel.category = '6';
+  myCategories.add(categoryModel);
 
   return myCategories;
 }
