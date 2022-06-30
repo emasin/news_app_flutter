@@ -23,7 +23,6 @@ class NewsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(hasStory);
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6))),

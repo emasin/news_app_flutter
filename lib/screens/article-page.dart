@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:news_app/components/action_card.dart';
 import 'package:news_app/models/news.dart';
 import 'package:news_app/models/Paragraph.dart';
 import 'package:news_app/data/example_data.dart' as Example;
@@ -125,6 +127,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
         for(var  o in jsonData["actions"]){
           ContributionAction p = ContributionAction.fromJson(o);
+
           list.add(p);
           //_list.add(p);
         }
@@ -133,6 +136,7 @@ class _ArticlePageState extends State<ArticlePage> {
         print('Something went wrong! ');
       }
       setState(() {
+
         _list = list;
       });
 
@@ -196,7 +200,9 @@ class _ArticlePageState extends State<ArticlePage> {
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       var text = '${title} ${jsonData["data"]["link"]}';
-      await Share.shareWithResult(text, subject: title).then((value) => _actionRequest(hash_key: uid, content_hash_str: hash, contribution_type: 6, contribution_action_val: title));
+      await Share.shareWithResult(text, subject: title).then((value){
+        print("shareWithResult ${ value.status}");
+        _actionRequest(hash_key: uid, content_hash_str: hash, contribution_type: 6, contribution_action_val: title);});
     }
 
 
@@ -253,7 +259,7 @@ class _ArticlePageState extends State<ArticlePage> {
   bool emojiShowing = false;
 
   _onEmojiSelected(Emoji emoji,String hash) {
-    print('$hash ${widget.article.uid} ${emoji.emoji}');
+
     Navigator.pop(context, "This string will be passed back to the parent",);
 
     _actionRequest(hash_key: widget.article.uid, contribution_action_val: emoji.emoji, contribution_type: 1, content_hash_str: hash);
@@ -279,7 +285,7 @@ class _ArticlePageState extends State<ArticlePage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     Size size = MediaQuery.of(context).size;
     bool _menuVisible = false;
-    print(size.height * 0.35);
+
     return PieCanvas(
       theme: PieTheme(overlayColor:themeProvider.themeMode().backgroundColor,
 
@@ -471,9 +477,10 @@ class _ArticlePageState extends State<ArticlePage> {
 
 
                                             for(var p in paragraphs3!){
-
+                                              p.children?.clear();
                                               for(var a in _list!){
                                                 if(p.hash == a.content_hash_str){
+                                                  print(a);
                                                   p.children?.add(a);
                                                 }
                                               }
@@ -719,12 +726,15 @@ class _ArticlePageState extends State<ArticlePage> {
                                                     child: GestureDetector(
 
                                                         onTap: (){
+                                                          /**
                                                          if(paragraphs3![index].children!.length > 0){
-                                                            if(paragraphs3![index].children![0].contribution_type == 2) {
-                                                              _launchInWebViewOrVC(Uri.parse(paragraphs3![index].children![0].contribution_action_val));
+                                                           Iterable<ContributionAction> a = paragraphs3![index].children!.where((v)=> v.contribution_type == 2);
+
+                                                            if(a.length > 0) {
+                                                              _launchInWebViewOrVC(Uri.parse(a.first.contribution_action_val));
                                                             }
-                                                            //print(paragraphs3![index].children![0].contribution_action_val);
                                                          }
+                                                              **/
 
                                                         },
                                                         child:Stack(children: [ Container(
@@ -749,22 +759,14 @@ class _ArticlePageState extends State<ArticlePage> {
                                                           ),Text('${paragraphs3![index].desc}',style: TextStyle(color: themeProvider
                                                               .themeMode()
                                                               .imageDescTextColor,fontSize: 14))
-                                                        ],)) :  HtmlWidget(
-                                                          '${paragraphs3![index].text}',
-                                                          textStyle: TextStyle(
-                                                              color: themeProvider
-                                                                  .themeMode()
-                                                                  .textColor,
-                                                              fontSize: 16),
-                                                        )) ,
+                                                        ],)) :  SelectableHtml(
+
+                                                          data:  '${paragraphs3![index].text}',
+                                                        )) ,  SizedBox(height:10),
                                                           paragraphs3![index].children!.length > 0 ? Positioned(child:
+                                                          ActionCard(paragraphs3![index].children)
 
-                                                          paragraphs3![index].children![0].contribution_type == 1 ?
-                                                          Text(paragraphs3![index].children![0].contribution_action_val,style: TextStyle(fontSize:22),) :
-                                                          paragraphs3![index].children![0].contribution_type == 2 ?
-                                                          Icon(Icons.play_circle,color: Colors.red,) : Icon(Icons.flag,color: Colors.orangeAccent,)
-
-                                                            ,right: 10,bottom: 5,) :
+                                                            ,right: 5,bottom: -5,) :
                                                               SizedBox()
                                                     ])
                                                     ),
