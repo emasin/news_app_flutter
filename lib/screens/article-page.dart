@@ -20,7 +20,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:image_stack/image_stack.dart';
 import '../constants.dart';
 import '../models/ContributionAction.dart';
 
@@ -211,6 +211,12 @@ class _ArticlePageState extends State<ArticlePage> {
   }
   String tags = "";
 
+  List<String> images = <String>[
+    "https://images.unsplash.com/photo-1458071103673-6a6e4c4a3413?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
+   ];
+
+
+
   @override
   void initState() {
     super.initState();
@@ -387,6 +393,34 @@ class _ArticlePageState extends State<ArticlePage> {
                                     ),
                                   ),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+
+                                      ImageStack(
+                                        imageList: images,
+                                        imageRadius: 25,
+                                        imageCount: 3,
+                                        imageBorderWidth: 1,
+                                        totalCount: images.length,
+                                        backgroundColor: Colors.white70,
+                                        imageBorderColor: Colors.orangeAccent,
+                                        extraCountBorderColor: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(
+                                      12,
+                                    ),
+                                  ),
+                                  child: Row(
                                     children: [
                                       Icon(
                                         Icons.watch_later_outlined,
@@ -421,14 +455,14 @@ class _ArticlePageState extends State<ArticlePage> {
                                       child: Row(
                                         children: [
                                           Icon(
-                                            Icons.share,
+                                            Icons.edit_note,
                                             color: Colors.grey.shade400,
                                           ),
                                           SizedBox(
                                             width: 8,
                                           ),
                                           Text(
-                                            "1k",
+                                            "6",
                                             style: kLabelblack,
                                           ),
                                         ],
