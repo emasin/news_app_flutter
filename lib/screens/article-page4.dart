@@ -20,7 +20,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:image_stack/image_stack.dart';
+
 import '../constants.dart';
 import '../models/ContributionAction.dart';
 
@@ -86,7 +86,7 @@ class _ArticlePageState extends State<ArticlePage> {
         'contribution_action_val': contribution_action_val,
       },
     );
-    myController.clear();
+
     late SnackBar snackBar = SnackBar(
         content: Text(
           response.statusCode.toString(),
@@ -211,16 +211,6 @@ class _ArticlePageState extends State<ArticlePage> {
   }
   String tags = "";
   static const int kTabletBreakpoint = 600;
-
-  List<String> images = <String>[
-    "https://ca.slack-edge.com/T02SL6R7CTD-U02SNG073UL-76516cc14607-512",
-    "https://ca.slack-edge.com/T02SL6R7CTD-U02SL790AKC-5b748b8c4408-512",
-    "https://ca.slack-edge.com/T02SL6R7CTD-U02SDGTEE86-d691acf9ecc7-512",
-    "https://ca.slack-edge.com/T02SL6R7CTD-U02S5JPUPRD-a74a7d864ab6-512",
-   ];
-
-
-
   @override
   void initState() {
     super.initState();
@@ -397,38 +387,6 @@ class _ArticlePageState extends State<ArticlePage> {
                                     ),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-
-                                      GestureDetector(
-                                          onTap:()=>{
-                                            showSnackBar("이 기사를 함께 보고 있는 사람들",context)
-                                          },
-                                          child:ImageStack(
-                                        imageList: images,
-                                        imageRadius: 25,
-                                        imageCount: 5,
-                                        imageBorderWidth: 1,
-                                        totalCount: images.length,
-                                        backgroundColor: Colors.white70,
-                                        imageBorderColor: Colors.orangeAccent,
-                                        extraCountBorderColor: Colors.black,
-                                      )),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(
-                                      12,
-                                    ),
-                                  ),
-                                  child: Row(
                                     children: [
                                       Icon(
                                         Icons.watch_later_outlined,
@@ -458,21 +416,19 @@ class _ArticlePageState extends State<ArticlePage> {
                                       12,
                                     ),
                                   ),
-                                  child:  GestureDetector(
-                                    onTap:()=>{
-                                      showSnackBar("이 기사의 활동 히스토리 ",context)
-                                    },
-                                    child: Row(
+                                  child: GestureDetector(
+
+                                      child: Row(
                                         children: [
                                           Icon(
-                                            Icons.edit_note,
+                                            Icons.share,
                                             color: Colors.grey.shade400,
                                           ),
                                           SizedBox(
                                             width: 8,
                                           ),
                                           Text(
-                                            "${_list.length}",
+                                            "1k",
                                             style: kLabelblack,
                                           ),
                                         ],
@@ -794,21 +750,20 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         ),
                                                         child:paragraphs3![index].type  == 'photo' ? Center(child: Column(children: [
                                                           HtmlWidget(
-                                                            '<img src="${paragraphs3![index].src}" style="width:100%">',
+                                                            '<img src="${paragraphs3![index].src}" style="width:100%" onError=this.src="${kNewsImage}"> ',
                                                             textStyle: TextStyle(
                                                                 color: themeProvider
                                                                     .themeMode()
                                                                     .textColor,
                                                                 fontSize: 16),
-                                                          )
-                                                          ,Text('${paragraphs3![index].desc}',style: TextStyle(color: themeProvider
+                                                          ),Text('${paragraphs3![index].desc}',style: TextStyle(color: themeProvider
                                                               .themeMode()
                                                               .imageDescTextColor,fontSize: 14))
                                                         ],)) :  SelectableHtml(
 
                                                           data:  '<p>${paragraphs3![index].text}</p>',
                                                         style: { "p": Style(
-                                                          fontSize: shortestSide < kTabletBreakpoint  ?  FontSize.large : FontSize.xLarge,
+                                                          fontSize: shortestSide < kTabletBreakpoint  ?  FontSize.medium : FontSize.xLarge,
                                                         ),}
 
                                                         ),) ,  SizedBox(height:10),
@@ -856,9 +811,6 @@ class _ArticlePageState extends State<ArticlePage> {
       ),
     );
   }
-}
-
-_showSnackBar(String s) {
 }
 
 class MenuItem {

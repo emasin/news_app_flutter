@@ -53,6 +53,7 @@ class NewsTile extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
                       imageUrl: image == "" ? kNewsImage : image,
+                      errorWidget:(context, url, error) => Image.network(kNewsImage),
                       placeholder: (context, url) => Image(
                         image: AssetImage('images/dotted-placeholder.jpg'),
                         height: 200,
