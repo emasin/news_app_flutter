@@ -95,7 +95,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
         title: Text('Stories'),
       ),
-      body: Container(
+      body: GestureDetector(
+          onHorizontalDragEnd: (DragEndDetails details) {
+              if (details.primaryVelocity! > 0) {
+              // User swiped Left
+              print('left');
+              Navigator.pop(context);
+              } else if (details.primaryVelocity! < 0) {
+              // User swiped Right
+              print('right');
+
+              }
+          },
+        child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         width: MediaQuery.of(context).size.width,
         child: ListView.builder(
@@ -121,7 +133,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             );
           },
         ),
-      ),
+      ),),
     );
   }
 }

@@ -105,6 +105,15 @@ class NewsTile extends StatelessWidget {
               ),
               onTap: () {
 
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArticlePage(article:new Article(uid:uid,title: title, author: 'author', authorPhoto: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80', category: 'Health', content: content, tags: tags, featuredImage: image, views: 10, time: DateTime.parse(date))),
+                  ),
+                );
+
+                /**
                 Navigator.push(
                   context,
                   Transition(
@@ -112,6 +121,9 @@ class NewsTile extends StatelessWidget {
                     transitionEffect: TransitionEffect.LEFT_TO_RIGHT,
                   ),
                 );
+                    **/
+
+
               },
             ),
           ],

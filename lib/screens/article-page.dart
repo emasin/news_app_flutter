@@ -803,15 +803,21 @@ class _ArticlePageState extends State<ArticlePage> {
                                                           )
                                                           ,Text('${paragraphs3![index].desc}',style: TextStyle(color: themeProvider
                                                               .themeMode()
-                                                              .imageDescTextColor,fontSize: 14))
-                                                        ],)) :  SelectableHtml(
+                                                              .imageDescTextColor,fontSize: 16))
+                                                        ],)) : SelectableText(paragraphs3![index].text,
+                                                        style: TextStyle(fontSize: shortestSide < kTabletBreakpoint  ?  FontSize(18.0).size: FontSize.xLarge.size),
+                                                          onSelectionChanged: (selection, cause) {
+
+                                                          },
+                                                        )/** Html(
+
 
                                                           data:  '<p>${paragraphs3![index].text}</p>',
                                                         style: { "p": Style(
-                                                          fontSize: shortestSide < kTabletBreakpoint  ?  FontSize.large : FontSize.xLarge,
+                                                          fontSize: shortestSide < kTabletBreakpoint  ?  FontSize(18.0): FontSize.xLarge,
                                                         ),}
 
-                                                        ),) ,  SizedBox(height:10),
+                                                        )**/,) ,  SizedBox(height:10),
                                                           paragraphs3![index].children!.length > 0 ? Positioned(child:
                                                           ActionCard(paragraphs3![index].children)
 
@@ -829,7 +835,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                 ),
                               ),
                             ]),
-                            onHorizontalDragEnd: (DragEndDetails details) {
+                            onHorizontalDragEnd: (DragEndDetails details) {/**
                               if (details.primaryVelocity! > 0) {
                                 // User swiped Left
                                 print('left');
@@ -837,7 +843,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                 // User swiped Right
                                 print('right');
                                 Navigator.pop(context);
-                              }
+                              }**/
                             })),
                   ],
                 ),
