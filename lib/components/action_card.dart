@@ -34,7 +34,7 @@ class ActionCard extends StatelessWidget {
                     _launchInWebViewOrVC(Uri.parse(actionList![index].contribution_action_val));
                   }) :
                   actionList![index].contribution_type == 3 ?
-                    Icon(Icons.flag,color: Colors.orangeAccent,size:28) : Icon(Icons.share,color: Colors.blueAccent,size:28)
+                    Icon(Icons.notification_important,color: Colors.red[400],size:28) : Icon(Icons.share,color: Colors.blueAccent,size:28)
 
               );
             }

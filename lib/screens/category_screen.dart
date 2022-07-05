@@ -100,9 +100,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
               if (details.primaryVelocity! > 0) {
               // User swiped Left
               print('left');
-              Navigator.pop(context);
+
               } else if (details.primaryVelocity! < 0) {
               // User swiped Right
+                Navigator.pop(context);
               print('right');
 
               }

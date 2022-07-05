@@ -569,21 +569,21 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                 (BuildContext
                                                                     context) {
                                                               return Container(
-                                                                height: 250,
+                                                                height: 400,
                                                                 color: Colors
                                                                     .amber,
                                                                 child: Center(
                                                                   child: Offstage(
                                                                     offstage: emojiShowing,
                                                                     child: SizedBox(
-                                                                      height: 250,
+                                                                      height: 400,
                                                                       child: EmojiPicker(
                                                                           onEmojiSelected: (Category category, Emoji emoji) {
                                                                             _onEmojiSelected(emoji,paragraphs3![index]!.hash);
                                                                           },
                                                                           onBackspacePressed: _onBackspacePressed,
                                                                           config: Config(
-                                                                              columns: 7,
+                                                                              columns: 10,
                                                                               // Issue: https://github.com/flutter/flutter/issues/28894
                                                                               emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
                                                                               verticalSpacing: 0,
@@ -642,7 +642,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                               return Padding(
                                                                   padding: MediaQuery.of(context).viewInsets,
                                                                   child:Container(
-                                                                height: 250,
+                                                                height: 300,
                                                                 color: baseColor,
                                                                 child: Center(
                                                                   child: Center(
@@ -734,9 +734,226 @@ class _ArticlePageState extends State<ArticlePage> {
                                                       PieAction(
                                                         tooltip: '!가장중요한',
                                                         child: const Icon(
-                                                            Icons.flag),
+                                                            Icons.notification_important),
                                                         onSelect: () =>
                                                             _actionRequest(hash_key: widget.article.uid, contribution_action_val: '', contribution_type: 3, content_hash_str:paragraphs3![index]!.hash ),
+                                                        buttonTheme:
+                                                        PieButtonTheme(
+                                                          backgroundColor:
+                                                          Colors
+                                                              .red[400],
+                                                        ),
+                                                      ),
+                                                      PieAction(
+                                                        tooltip: 'Flag Issue',
+                                                        child: const Icon(
+                                                            Icons.flag),
+                                                        onSelect: ()  {
+
+
+
+                                                          showModalBottomSheet<
+                                                              void>(
+                                                            isScrollControlled:true,
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                            context) {
+                                                              return Padding(
+                                                                  padding: MediaQuery.of(context).viewInsets,
+                                                                  child:Container(
+                                                                    height: 300,
+                                                                    color: baseColor,
+                                                                    child: Center(
+                                                                      child: Center(
+
+                                                                          child:  Form(
+                                                                              key: _formKey,
+                                                                              child: Column(
+                                                                                children: [
+
+                                                                                  Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                                      child:
+                                                                                      TextFormField(
+                                                                                          validator: (value){
+                                                                                            if(value!.isEmpty ){
+                                                                                              return '입력해주세요';
+                                                                                            }else{
+                                                                                              return null;
+                                                                                            }
+                                                                                          },
+
+                                                                                          focusNode: focus,
+
+                                                                                          enableInteractiveSelection:true,
+                                                                                          maxLines:3,
+                                                                                          maxLength: 100,
+                                                                                          decoration: InputDecoration(
+                                                                                            border: OutlineInputBorder(),
+                                                                                            labelText: '토론내용',
+                                                                                          )
+                                                                                      )),
+
+                                                                                  Center(child:Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                                      child:ElevatedButton(style: ElevatedButton.styleFrom(
+                                                                                        // background color
+
+                                                                                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                                                                          textStyle: const TextStyle(fontSize: 20),
+                                                                                          primary:themeProvider
+                                                                                              .themeMode()
+                                                                                              .toggleBackgroundColor
+                                                                                      ),
+                                                                                        onPressed: (){
+                                                                                          _actionRequest(hash_key: widget.article.uid, contribution_action_val: myController.text, contribution_type: 2, content_hash_str:paragraphs3![index]!.hash );
+                                                                                          Navigator.pop(context, "This string will be passed back to the parent",);
+                                                                                        },
+                                                                                        child: Text("토론생성",style: TextStyle(color: themeProvider
+                                                                                            .themeMode()
+                                                                                            .textColor),),
+                                                                                      )))
+                                                                                ],
+                                                                              ))),
+                                                                    ),
+                                                                  ));
+                                                            },
+                                                          );
+                                                        },
+                                                        buttonTheme:
+                                                        PieButtonTheme(
+                                                          backgroundColor:
+                                                          Colors
+                                                              .orange[700],
+                                                        ),
+                                                      ),
+                                                      PieAction(
+                                                        tooltip: '관련 뉴스',
+                                                        child: const Icon(
+                                                            Icons.newspaper),
+                                                        onSelect: () =>
+
+
+
+
+
+                                                            showModalBottomSheet<
+                                                                void>(
+                                                              isScrollControlled:true,
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                              context) {
+                                                                return Padding(
+                                                                    padding: MediaQuery.of(context).viewInsets,
+                                                                    child:Container(
+                                                                      height: 400,
+                                                                      color: baseColor,
+                                                                      child: Center(
+                                                                        child: Center(
+
+                                                                            child:  Form(
+                                                                                key: _formKey,
+                                                                                child: Column(
+                                                                                  children: [
+                                                                                    Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                                      child:TextFormField(
+                                                                                          validator: (value){
+                                                                                            if(value!.isEmpty){
+                                                                                              return '입력해주세요';
+                                                                                            }else{
+                                                                                              return null;
+                                                                                            }
+                                                                                          },
+
+                                                                                          keyboardType: TextInputType.url,
+                                                                                          controller:myController,
+                                                                                          textInputAction: TextInputAction.next,
+                                                                                          autofocus: true,
+
+                                                                                          decoration: InputDecoration(
+                                                                                            border: OutlineInputBorder(),
+                                                                                            labelText: '기사검색',
+                                                                                            contentPadding: EdgeInsets.all(10),
+
+
+
+                                                                                          )
+
+                                                                                      ),
+                                                                                    ),
+
+                                                                                  ],
+                                                                                ))),
+                                                                      ),
+                                                                    ));
+                                                              },
+                                                            ),
+
+                                                        buttonTheme:
+                                                        PieButtonTheme(
+                                                          backgroundColor:
+                                                          Colors
+                                                              .grey[700],
+                                                        ),
+                                                      ),
+                                                      PieAction(
+                                                        tooltip: '투표/토론',
+                                                        child: const Icon(
+                                                            Icons.how_to_vote),
+                                                        onSelect: () =>
+
+                                                            showModalBottomSheet<
+                                                                void>(
+                                                              isScrollControlled:true,
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                              context) {
+                                                                return Padding(
+                                                                    padding: MediaQuery.of(context).viewInsets,
+                                                                    child:Container(
+                                                                      height: 400,
+                                                                      color: baseColor,
+                                                                      child: Center(
+                                                                        child: Center(
+
+                                                                            child:  Form(
+                                                                                key: _formKey,
+                                                                                child: Column(
+                                                                                  children: [
+                                                                                    Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
+                                                                                      child:TextFormField(
+                                                                                          validator: (value){
+                                                                                            if(value!.isEmpty){
+                                                                                              return '입력해주세요';
+                                                                                            }else{
+                                                                                              return null;
+                                                                                            }
+                                                                                          },
+
+                                                                                          keyboardType: TextInputType.url,
+                                                                                          controller:myController,
+                                                                                          textInputAction: TextInputAction.next,
+                                                                                          autofocus: true,
+
+                                                                                          decoration: InputDecoration(
+                                                                                            border: OutlineInputBorder(),
+                                                                                            labelText: '투표/토론 검색',
+                                                                                            contentPadding: EdgeInsets.all(10),
+
+
+
+                                                                                          )
+
+                                                                                      ),
+                                                                                    ),
+
+                                                                                  ],
+                                                                                ))),
+                                                                      ),
+                                                                    ));
+                                                              },
+                                                            ),
                                                         buttonTheme:
                                                         PieButtonTheme(
                                                           backgroundColor:
@@ -786,7 +1003,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                             decoration:BoxDecoration(
                                                           border: Border.all(
                                                             width: 0,
-                                                            color: paragraphs3![index].children!.length > 0 &&  paragraphs3![index].children![0].contribution_type == 3   ?  Colors.orangeAccent : Colors.transparent,
+                                                            color: paragraphs3![index].children!.length > 0 &&  paragraphs3![index].children![0].contribution_type == 3   ?  Color(0xFFFF1744) : Colors.transparent,
 
                                                           ),
 
