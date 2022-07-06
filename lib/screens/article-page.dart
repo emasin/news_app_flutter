@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:news_app/components/action_card.dart';
+import 'package:news_app/components/news_tile.dart';
 import 'package:news_app/models/news.dart';
 import 'package:news_app/models/Paragraph.dart';
 import 'package:news_app/data/example_data.dart' as Example;
@@ -50,7 +51,7 @@ class _ArticlePageState extends State<ArticlePage> {
   Future<List<Paragraph>>? _contentList;
   Future<List<ContributionAction>>? _actionList;
   late List<ContributionAction> _list = [];
-
+  List articles = [];
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
       url,
@@ -106,6 +107,48 @@ class _ArticlePageState extends State<ArticlePage> {
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     _fetch2();
+  }
+
+
+
+  Future<List<Article>> _fetch3(keyword) async {
+
+    if(isLoading)
+      return [];
+
+    var url = '${baseUrl}/v2/api/interest/prime/news/search/' +
+        keyword;
+
+    String result = 'loading.. $url';
+    print(result);
+    List<Article> list = [];
+    try {
+      isLoading = true;
+      var response = await http.get(Uri.parse(url));
+      print(response);
+      if (response.statusCode == HttpStatus.ok) {
+        var jsonData = jsonDecode(response.body);
+
+        for(var  o in jsonData){
+          Article p = Article.fromJson(o);
+          list.add(p);
+        }
+
+
+        //result = jsonData[0]["content"];
+
+      } else {
+        print('Something went wrong! ');
+      }
+    } catch (exception){
+      print(url + " " + exception.toString());
+      list = [];
+      return list;
+    } finally {
+      isLoading = false;
+    }
+
+    return list;
   }
 
 
@@ -252,7 +295,11 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   void searchArticle() {
-    print('Searching.. : ${articleController.text}');
+
+    if(articleController.text.length > 1) {
+      _fetch3(articleController.text);
+    }
+
   }
 
 
@@ -293,6 +340,7 @@ class _ArticlePageState extends State<ArticlePage> {
   void dispose() {
     // Clean up the controller when the widget is removed from the
     // widget tree.
+    articles.clear();
     myController.dispose();
     articleController.dispose();
     super.dispose();
@@ -875,7 +923,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                           },
 
 
-                                                                                          controller:myController,
+                                                                                          controller:articleController,
 
                                                                                           autofocus: true,
 
@@ -891,6 +939,24 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                       ),
                                                                                     ),
 
+                                                                                    ListView.builder(
+                                                                                      scrollDirection: Axis.vertical,
+                                                                                      shrinkWrap: true,
+                                                                                      physics: ClampingScrollPhysics(),
+                                                                                      itemCount: articles.length,
+                                                                                      itemBuilder: (BuildContext context, int index) {
+                                                                                        return   NewsTile(
+                                                                                          uid:  articles[index].uid,
+                                                                                          image: articles[index].image,
+                                                                                          title: articles[index].title,
+                                                                                          content: "",
+                                                                                          date: articles[index].published_at,
+                                                                                          fullArticle: articles[index].fullArticle,
+                                                                                          tags:articles[index].tags,
+                                                                                          hasStory: articles[index].hasStory,
+                                                                                        ) ;
+                                                                                      },
+                                                                                    )
                                                                                   ],
                                                                                 ))),
                                                                       ),

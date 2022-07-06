@@ -22,5 +22,15 @@ class Article {
     required this.views,
     required this.time,
   });
+
+  factory Article.fromJson(Map<String, dynamic> json) {
+    return Article(
+        uid: json['uid'] == null ? '' : json['uid'],
+        title:  json['title'] == null ? '' : json['title'],
+        time: json['published_at'] == null ? 0 : json['published_at'],
+        featuredImage:  json['thumbnail'] == null ? '' : json['thumbnail'], views: 0, content: '', category: '', author: '', tags: '', authorPhoto: '',
+
+    );
+  }
 }
 
