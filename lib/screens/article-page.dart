@@ -243,12 +243,19 @@ class _ArticlePageState extends State<ArticlePage> {
 
 
     myController.addListener(_printLatestValue);
+    articleController.addListener(searchArticle);
     getTheme();
   }
 
   void _printLatestValue() {
     print('Second text field: ${myController.text}');
   }
+
+  void searchArticle() {
+    print('Searching.. : ${articleController.text}');
+  }
+
+
 
   Icon themeIcon = Icon(Icons.dark_mode);
   bool isLightTheme = false;
@@ -279,6 +286,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
   }
   final myController = TextEditingController();
+  final articleController = TextEditingController();
   final _formKey=GlobalKey<FormState>();
   final focus = FocusNode();
   @override
@@ -286,6 +294,7 @@ class _ArticlePageState extends State<ArticlePage> {
     // Clean up the controller when the widget is removed from the
     // widget tree.
     myController.dispose();
+    articleController.dispose();
     super.dispose();
   }
 
@@ -333,7 +342,7 @@ class _ArticlePageState extends State<ArticlePage> {
                     Transform.translate(
                       offset:  Offset(
                         0,
-                        (size.height * 2) / 25,
+                        (size.height * 2) / 30,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -341,7 +350,7 @@ class _ArticlePageState extends State<ArticlePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              height: 20,
+                              height: 5,
                             ),
                             Text(
                               widget.article.title,
@@ -865,9 +874,9 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                             }
                                                                                           },
 
-                                                                                          keyboardType: TextInputType.url,
+
                                                                                           controller:myController,
-                                                                                          textInputAction: TextInputAction.next,
+
                                                                                           autofocus: true,
 
                                                                                           decoration: InputDecoration(
@@ -1021,7 +1030,11 @@ class _ArticlePageState extends State<ArticlePage> {
                                                           ,Text('${paragraphs3![index].desc}',style: TextStyle(color: themeProvider
                                                               .themeMode()
                                                               .imageDescTextColor,fontSize: 16))
-                                                        ],)) : SelectableText(paragraphs3![index].text,
+                                                        ],)) : SelectableText(paragraphs3![index].text.replaceAll( RegExp(
+                                                                                                                      r"<[^>]*>",
+                                                                                                                      multiLine: true,
+                                                                                                                      caseSensitive: true
+                                                                                                                    ), ''),
                                                         style: TextStyle(fontSize: shortestSide < kTabletBreakpoint  ?  FontSize(18.0).size: FontSize.xLarge.size),
                                                           onSelectionChanged: (selection, cause) {
 
