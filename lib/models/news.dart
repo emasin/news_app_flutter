@@ -8,7 +8,7 @@ class Article {
       authorPhoto,
       uid;
   final int views;
-  final DateTime time;
+  final DateTime? time;
 
   Article({
     required this.uid,
@@ -25,9 +25,9 @@ class Article {
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
-        uid: json['uid'] == null ? '' : json['uid'],
+        uid: json['_key'] == null ? '' : json['_key'],
         title:  json['title'] == null ? '' : json['title'],
-        time: json['published_at'] == null ? 0 : json['published_at'],
+        time: json['published_at'] == null ? null : DateTime.parse(json['published_at']),
         featuredImage:  json['thumbnail'] == null ? '' : json['thumbnail'], views: 0, content: '', category: '', author: '', tags: '', authorPhoto: '',
 
     );

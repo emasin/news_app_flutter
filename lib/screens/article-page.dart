@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -50,8 +51,9 @@ class _ArticlePageState extends State<ArticlePage> {
 
   Future<List<Paragraph>>? _contentList;
   Future<List<ContributionAction>>? _actionList;
+  Future<List<Article>>? articles;
   late List<ContributionAction> _list = [];
-  List articles = [];
+
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
       url,
@@ -109,6 +111,38 @@ class _ArticlePageState extends State<ArticlePage> {
     _fetch2();
   }
 
+  Future<String>? searchResult;
+
+  Future<String> _fetch4(keyword) async {
+
+
+    var url = '${baseStagingUrl}/v2/api/interest/prime/news/search/' +
+        keyword;
+
+    String result = 'loading.. $url';
+
+    List<Article> list = [];
+    try {
+      isLoading = true;
+      var response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == HttpStatus.ok) {
+        print("fetch4 ${response.body}");
+        return response.body;
+
+
+      } else {
+        print('Something went wrong! ');
+      }
+    } catch (exception){
+
+      return '';
+    } finally {
+      isLoading = false;
+    }
+
+    return '';
+  }
 
 
   Future<List<Article>> _fetch3(keyword) async {
@@ -116,19 +150,19 @@ class _ArticlePageState extends State<ArticlePage> {
     if(isLoading)
       return [];
 
-    var url = '${baseUrl}/v2/api/interest/prime/news/search/' +
+    var url = '${baseStagingUrl}/v2/api/interest/prime/news/search/' +
         keyword;
 
     String result = 'loading.. $url';
-    print(result);
+
     List<Article> list = [];
     try {
       isLoading = true;
       var response = await http.get(Uri.parse(url));
-      print(response);
+
       if (response.statusCode == HttpStatus.ok) {
         var jsonData = jsonDecode(response.body);
-
+        print(jsonData);
         for(var  o in jsonData){
           Article p = Article.fromJson(o);
           list.add(p);
@@ -295,9 +329,15 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   void searchArticle() {
-
+    print('Second text field: ${articleController.text}');
     if(articleController.text.length > 1) {
-      _fetch3(articleController.text);
+      setState(() {
+        searchResult = _fetch4(articleController.text);
+        print("searchResult $searchResult");
+        //_fetch3(articleController.text).then((value) => this.articles = value);
+      });
+
+
     }
 
   }
@@ -340,7 +380,7 @@ class _ArticlePageState extends State<ArticlePage> {
   void dispose() {
     // Clean up the controller when the widget is removed from the
     // widget tree.
-    articles.clear();
+
     myController.dispose();
     articleController.dispose();
     super.dispose();
@@ -496,7 +536,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                       ),
                                       Text(
                                         timego.format(
-                                          widget.article.time,
+                                          widget.article.time!,
                                           locale: 'en_short',
                                         ),
                                         style: kLabelblack,
@@ -731,7 +771,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
 
                                                                                   )
-                                                                                      
+
                                                                               ),
                                                                               ),
                                                                             Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
@@ -887,83 +927,224 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         tooltip: '관련 뉴스',
                                                         child: const Icon(
                                                             Icons.newspaper),
-                                                        onSelect: () =>
-
-
-
-
-
-                                                            showModalBottomSheet<
-                                                                void>(
-                                                              isScrollControlled:true,
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext
-                                                              context) {
-                                                                return Padding(
-                                                                    padding: MediaQuery.of(context).viewInsets,
-                                                                    child:Container(
-                                                                      height: 400,
-                                                                      color: baseColor,
+                                                        onSelect: ()
+                                                        {
+                                                          String content_hash_str = paragraphs3![index]!.hash;
+                                                          showModalBottomSheet<
+                                                              void>(
+                                                            isScrollControlled: true,
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                            context) {
+                                                              return Padding(
+                                                                  padding: MediaQuery
+                                                                      .of(
+                                                                      context)
+                                                                      .viewInsets,
+                                                                  child: Container(
+                                                                    height: 400,
+                                                                    color: baseColor,
+                                                                    child: Center(
                                                                       child: Center(
-                                                                        child: Center(
 
-                                                                            child:  Form(
-                                                                                key: _formKey,
-                                                                                child: Column(
-                                                                                  children: [
-                                                                                    Padding(padding: EdgeInsets.symmetric(vertical:5,horizontal:5),
-                                                                                      child:TextFormField(
-                                                                                          validator: (value){
-                                                                                            if(value!.isEmpty){
-                                                                                              return '입력해주세요';
-                                                                                            }else{
-                                                                                              return null;
-                                                                                            }
-                                                                                          },
-
-
-                                                                                          controller:articleController,
-
-                                                                                          autofocus: true,
-
-                                                                                          decoration: InputDecoration(
-                                                                                            border: OutlineInputBorder(),
-                                                                                            labelText: '기사검색',
-                                                                                            contentPadding: EdgeInsets.all(10),
+                                                                          child: Form(
+                                                                              key: _formKey,
+                                                                              child: Column(
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets
+                                                                                        .symmetric(
+                                                                                        vertical: 5,
+                                                                                        horizontal: 5),
+                                                                                    child: TextFormField(
+                                                                                        validator: (
+                                                                                            value) {
+                                                                                          if (value!
+                                                                                              .isEmpty) {
+                                                                                            return '입력해주세요';
+                                                                                          } else {
+                                                                                            return null;
+                                                                                          }
+                                                                                        },
 
 
+                                                                                        controller: articleController,
 
-                                                                                          )
+                                                                                        autofocus: true,
 
-                                                                                      ),
+                                                                                        decoration: InputDecoration(
+                                                                                          border: OutlineInputBorder(),
+                                                                                          labelText: '기사검색',
+                                                                                          contentPadding: EdgeInsets
+                                                                                              .all(
+                                                                                              10),
+
+
+                                                                                        )
+
                                                                                     ),
+                                                                                  ),
 
-                                                                                    ListView.builder(
-                                                                                      scrollDirection: Axis.vertical,
-                                                                                      shrinkWrap: true,
-                                                                                      physics: ClampingScrollPhysics(),
-                                                                                      itemCount: articles.length,
-                                                                                      itemBuilder: (BuildContext context, int index) {
-                                                                                        return   NewsTile(
-                                                                                          uid:  articles[index].uid,
-                                                                                          image: articles[index].image,
-                                                                                          title: articles[index].title,
-                                                                                          content: "",
-                                                                                          date: articles[index].published_at,
-                                                                                          fullArticle: articles[index].fullArticle,
-                                                                                          tags:articles[index].tags,
-                                                                                          hasStory: articles[index].hasStory,
-                                                                                        ) ;
-                                                                                      },
-                                                                                    )
-                                                                                  ],
-                                                                                ))),
-                                                                      ),
-                                                                    ));
-                                                              },
-                                                            ),
 
+                                                                                  Expanded(
+                                                                                      child:
+                                                                                      FutureBuilder<
+                                                                                          String>(
+                                                                                          future: searchResult,
+                                                                                          builder: (
+                                                                                              context,
+                                                                                              snapshot) {
+                                                                                            List<
+                                                                                                Article?>? list = [
+                                                                                            ];
+
+                                                                                            if (snapshot
+                                                                                                .hasData) {
+                                                                                              var jsonData = jsonDecode(
+                                                                                                  snapshot
+                                                                                                      .data!);
+
+                                                                                              print("jsonData ${jsonData}");
+
+                                                                                              for (var o in jsonData) {
+                                                                                                Article p = Article
+                                                                                                    .fromJson(
+                                                                                                    o);
+                                                                                                list
+                                                                                                    .add(
+                                                                                                    p);
+                                                                                              }
+                                                                                            } else
+                                                                                            if (snapshot
+                                                                                                .hasError) {
+                                                                                              print(
+                                                                                                  snapshot
+                                                                                                      .data); // null
+                                                                                              print(
+                                                                                                  snapshot
+                                                                                                      .error); // 에러메세지 ex) 사용자 정보를 확인할 수 없습니다.
+                                                                                              return Text(
+                                                                                                  "에러 일때 화면");
+                                                                                            }
+                                                                                            return ListView
+                                                                                                .builder(
+                                                                                                shrinkWrap: true,
+                                                                                                itemCount: list
+                                                                                                    ?.length,
+                                                                                                physics: BouncingScrollPhysics(),
+                                                                                                itemBuilder: (
+                                                                                                    BuildContext context,
+                                                                                                    int i) {
+                                                                                                  print(i);
+                                                                                                  return GestureDetector(
+                                                                                                    onTap: () {
+                                                                                                      print(
+                                                                                                          'has ${content_hash_str}');
+
+                                                                                                      _actionRequest(
+                                                                                                          hash_key: widget
+                                                                                                              .article
+                                                                                                              .uid,
+                                                                                                          contribution_action_val: list[i]!
+                                                                                                              .uid,
+                                                                                                          contribution_type: 7,
+                                                                                                          content_hash_str: content_hash_str);
+                                                                                                      Navigator
+                                                                                                          .pop(
+                                                                                                        context,
+                                                                                                        "This string will be passed back to the parent",);
+                                                                                                    },
+                                                                                                    child: Padding(
+                                                                                                      padding: EdgeInsets
+                                                                                                          .symmetric(
+                                                                                                          vertical: 5,
+                                                                                                          horizontal: 5),
+                                                                                                      child: Row(
+                                                                                                        children: [
+                                                                                                          CachedNetworkImage(
+                                                                                                            alignment: Alignment
+                                                                                                                .center,
+                                                                                                            height: 50,
+                                                                                                            width: 50,
+                                                                                                            fit: BoxFit
+                                                                                                                .cover,
+                                                                                                            imageUrl: list[i]!
+                                                                                                                .featuredImage ==
+                                                                                                                ""
+                                                                                                                ? kNewsImage
+                                                                                                                : list[i]!
+                                                                                                                .featuredImage,
+                                                                                                            errorWidget: (
+                                                                                                                context,
+                                                                                                                url,
+                                                                                                                error) =>
+                                                                                                                Image
+                                                                                                                    .network(
+                                                                                                                    kNewsImage),
+                                                                                                            placeholder: (
+                                                                                                                context,
+                                                                                                                url) =>
+                                                                                                                Image(
+                                                                                                                  image: AssetImage(
+                                                                                                                      'images/dotted-placeholder.jpg'),
+                                                                                                                  height: 50,
+                                                                                                                  width: 50,
+                                                                                                                  fit: BoxFit
+                                                                                                                      .cover,
+                                                                                                                ),
+                                                                                                          ),
+                                                                                                          SizedBox(
+                                                                                                            width: 5,),
+                                                                                                      Flexible(child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment
+                                                                                                                .start,
+                                                                                                            mainAxisSize: MainAxisSize
+                                                                                                                .min,
+                                                                                                            children: [
+                                                                                                              Text(
+                                                                                                                  list[i]!
+                                                                                                                      .title,
+                                                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                                                  style: TextStyle(
+                                                                                                                    color: themeProvider
+                                                                                                                        .themeMode()
+                                                                                                                        .textColor,
+                                                                                                                    fontSize: 14,)),
+                                                                                                              SizedBox(height: 5,),
+                                                                                                              Text(
+                                                                                                                  list[i]!
+                                                                                                                      .time
+                                                                                                                      .toString(),
+                                                                                                                  style: TextStyle(
+                                                                                                                    color: themeProvider
+                                                                                                                        .themeMode()
+                                                                                                                        .imageDescTextColor,
+                                                                                                                    fontSize: 12,))
+                                                                                                            ],
+
+                                                                                                          )),SizedBox(
+                                                                                                            width: 5,)
+
+                                                                                                        ],),),)
+
+
+                                                                                                  ;
+                                                                                                }
+                                                                                            );
+                                                                                          }))
+
+
+                                                                                ],
+                                                                              ))),
+                                                                    ),
+                                                                  ))
+
+
+                                                              ;
+                                                            },
+                                                          );
+                                                        },
                                                         buttonTheme:
                                                         PieButtonTheme(
                                                           backgroundColor:
