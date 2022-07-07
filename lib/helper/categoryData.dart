@@ -58,6 +58,14 @@ Future<List<CategoryModel>> getCategories()  async {
   categoryModel.category = '1';
   myCategories.add(categoryModel);
 
+
+  categoryModel = new CategoryModel();
+  categoryModel.categoryName = "Newming Contents";
+  categoryModel.imageAssetUrl = kNewmingImage;
+  categoryModel.category = '7';
+  myCategories.add(categoryModel);
+
+
   categoryModel = new CategoryModel();
   categoryModel.categoryName = "Youtube";
   categoryModel.imageAssetUrl = kYoutubeImage;
@@ -75,6 +83,10 @@ Future<List<CategoryModel>> getCategories()  async {
   categoryModel.imageAssetUrl = kShareImage;
   categoryModel.category = '6';
   myCategories.add(categoryModel);
+
+
+
+
 
   return myCategories;
 }

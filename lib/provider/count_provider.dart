@@ -16,4 +16,9 @@ class Counter with ChangeNotifier {
     notifyListeners();
   }
 
+  void set(int value) {
+    _count = value;
+    notifyListeners();
+  }
+
 }

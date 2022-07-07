@@ -12,8 +12,6 @@ class ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ActionCard");
-    print(actionList!.length);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 0.0),
       child: GestureDetector(
@@ -25,7 +23,7 @@ class ActionCard extends StatelessWidget {
               scrollDirection :  Axis.horizontal,
             itemCount: actionList?.length,
             itemBuilder: (context, index) {
-              print(actionList![index].contribution_type);
+
               return Padding( padding: const EdgeInsets
                   .symmetric(horizontal: 7),
                   child: actionList![index].contribution_type == 1 ?
@@ -34,7 +32,10 @@ class ActionCard extends StatelessWidget {
                     _launchInWebViewOrVC(Uri.parse(actionList![index].contribution_action_val));
                   }) :
                   actionList![index].contribution_type == 3 ?
-                    Icon(Icons.notification_important,color: Colors.red[400],size:28) : Icon(Icons.share,color: Colors.blueAccent,size:28)
+                    Icon(Icons.notification_important,color: Colors.red[400],size:28) :  actionList![index].contribution_type == 7 ?
+                  GestureDetector(child:Icon(Icons.newspaper,color: Colors.grey,size:28),onTap:(){
+                    _launchInWebViewOrVC(Uri.parse(actionList![index].contribution_action_val));
+                  }) : Icon(Icons.share,color: Colors.blueAccent,size:28)
 
               );
             }
