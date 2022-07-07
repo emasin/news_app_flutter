@@ -12,6 +12,9 @@ const kImportantImage =
     'https://creativouae.com/wp-content/uploads/2020/03/Important.jpg';
 const kShareImage =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-LBdmVaCLmwmz7E3_FCufYAybTEd88KX7pA&usqp=CAU';
+
+const kNewmingImage =
+    'https://is5-ssl.mzstatic.com/image/thumb/PurpleSource114/v4/61/55/33/6155331c-a31a-d190-c922-8c215c736d29/077a0048-39ac-4f1b-9315-585a4953d899_5.5_2.jpg/392x696bb.jpg';
 const kEntertainmetImage =
     'https://images.unsplash.com/photo-1583512130600-6f201806dd3c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=588&q=80';
 const kSportsImage =

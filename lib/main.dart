@@ -84,10 +84,13 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
         print('Data: ' + event.data!);
 
 
-        this.counter.increment();
+       // this.counter.increment();
       }, onError: (error) {
             print('main ${error}' );
-            this.counter.init();
+        /**
+         * todo 구독용 Provider 추구 하기
+         */
+        //this.counter.init();
       });
     }
 
