@@ -8,6 +8,7 @@ class Article {
       authorPhoto,
       uid;
   final int views;
+  int content_type = 1;
   final DateTime? time;
 
   Article({
@@ -21,14 +22,19 @@ class Article {
     required this.featuredImage,
     required this.views,
     required this.time,
+    required this.content_type
   });
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
-        uid: json['_key'] == null ? '' : json['_key'],
+        uid: json['content_uid'] == null ? '' : json['content_uid'],
         title:  json['title'] == null ? '' : json['title'],
         time: json['published_at'] == null ? null : DateTime.parse(json['published_at']),
-        featuredImage:  json['thumbnail'] == null ? '' : json['thumbnail'], views: 0, content: '', category: '', author: '', tags: '', authorPhoto: '',
+        featuredImage:  json['image'] == null ? '' : json['image'],
+        views: 0, content: '', category: '',
+        author:  json['user_nm'] == null ? '' : json['user_nm'],
+        tags: '', authorPhoto: '',
+        content_type:  json['content_type'] == null ? 0 : json['content_type'],
 
     );
   }

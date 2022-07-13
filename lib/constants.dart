@@ -1,6 +1,12 @@
 const kNewsImage =
     'https://eoienglish.es/images/2021/03/10/news-1644696_1280.png';
 
+const kNewmingLogoImage =
+    'https://cdn.newming.io/logo/newming-app.png';
+
+
+
+
 const kAllImage =
     'https://miro.medium.com/max/1400/1*PNBzVeucHWh68LdTukOJLw.png';
 

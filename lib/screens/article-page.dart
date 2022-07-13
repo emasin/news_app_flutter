@@ -111,7 +111,7 @@ class _ArticlePageState extends State<ArticlePage> {
   Future<List<Article>> _fetch4(keyword) async {
 
 
-    var url = '${baseUrl}/v2/api/interest/prime/news/search/' +
+    var url = '${baseUrl}/v2/api/search?keyword=' +
         keyword;
 
     String result = 'loading.. $url';
@@ -137,7 +137,7 @@ class _ArticlePageState extends State<ArticlePage> {
               .fromJson(
               o);
 
-            _articleList.add(p) ;
+            _articleList.add(p);
 
 
           Provider.of<Counter>(context,listen:false).set(_articleList.length);
@@ -284,10 +284,12 @@ class _ArticlePageState extends State<ArticlePage> {
 
 
 
-  void _articleRelated(String uid,String related_uid,String hash) async {
+  void _articleRelated(String uid,String related_uid,String hash,int content_type) async {
+
 
     String kinshortsEndpoint =
-        'https://news-api.newming.io/v1/articles/${related_uid}/link';
+        content_type == 1 ? 'https://news-api.newming.io/v1/articles/${related_uid}/link' : 'https://api.newming.io/v1/posts/${related_uid}/link?link=/share/post/${related_uid}';
+
     http.Client client = http.Client();
     http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
     if (response.statusCode == 200) {
@@ -872,7 +874,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                               .red[400],
                                                         ),
                                                       ),
-                                                      PieAction(
+                                                      /**PieAction(
                                                         tooltip: 'Flag Issue',
                                                         child: const Icon(
                                                             Icons.flag),
@@ -953,7 +955,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                           Colors
                                                               .orange[700],
                                                         ),
-                                                      ),
+                                                      ), **/
                                                       PieAction(
                                                         tooltip: '뉴밍 콘텐츠(뉴스/토론/투표) 검색',
                                                         child: const Icon(
@@ -1043,7 +1045,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
 
 
-                                                                                                _articleRelated(widget.article.uid,_articleList[i]!.uid,content_hash_str);
+                                                                                                _articleRelated(widget.article.uid,_articleList[i]!.uid,content_hash_str,_articleList[i]!.content_type);
 
                                                                                                 Navigator
                                                                                                     .pop(
@@ -1067,7 +1069,8 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                                       imageUrl: _articleList[i]!
                                                                                                           .featuredImage ==
                                                                                                           ""
-                                                                                                          ? kNewsImage
+                                                                                                          ? _articleList[i]!
+                                                                                                          .content_type == 1  ? kNewsImage : kNewmingLogoImage
                                                                                                           : _articleList[i]!
                                                                                                           .featuredImage,
                                                                                                       errorWidget: (
@@ -1146,7 +1149,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                               .grey[700],
                                                         ),
                                                       ),
-                                                      PieAction(
+                                                      /**PieAction(
                                                         tooltip: 'Photos & Files',
                                                         child: const Icon(
                                                             Icons.attach_file),
@@ -1154,7 +1157,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                             showSnackBar(
                                                                 'Attach #$index',
                                                                 context),
-                                                      ),
+                                                      ),**/
                                                       PieAction(
                                                         tooltip: 'Share',
                                                         child: const Icon(
