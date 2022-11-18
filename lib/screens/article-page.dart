@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:news_app/data/example_data.dart' as Example;
 import 'package:news_app/provider/count_provider.dart';
 import 'package:timeago/timeago.dart' as timego;
 import 'package:news_app/paltte.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+
 import 'package:hive/hive.dart';
 import 'package:news_app/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -111,7 +112,7 @@ class _ArticlePageState extends State<ArticlePage> {
   Future<List<Article>> _fetch4(keyword) async {
 
 
-    var url = '${baseUrl}/v2/api/search?keyword=' +
+    var url = '${searchUrl}/v2/api/search?keyword=' +
         keyword;
 
     String result = 'loading.. $url';
@@ -708,7 +709,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                     child: SizedBox(
                                                                       height: 400,
                                                                       child: EmojiPicker(
-                                                                          onEmojiSelected: (Category category, Emoji emoji) {
+                                                                          onEmojiSelected: (Category? category, Emoji emoji) {
                                                                             _onEmojiSelected(emoji,paragraphs3![index]!.hash);
                                                                           },
                                                                           onBackspacePressed: _onBackspacePressed,
@@ -724,7 +725,6 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                               indicatorColor: Colors.blue,
                                                                               iconColor: Colors.grey,
                                                                               iconColorSelected: Colors.blue,
-                                                                              progressIndicatorColor: Colors.blue,
                                                                               backspaceColor: Colors.blue,
                                                                               skinToneDialogBgColor: Colors.white,
                                                                               skinToneIndicatorColor: Colors.grey,
@@ -751,7 +751,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                             PieButtonTheme(
                                                           backgroundColor:
                                                               Colors
-                                                                  .yellow[700],
+                                                                  .yellow[700], iconColor: null,
                                                         ),
                                                       ),
                                                       PieAction(
@@ -858,7 +858,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         PieButtonTheme(
                                                           backgroundColor:
                                                           Colors
-                                                              .red[700],
+                                                              .red[700], iconColor: null,
                                                         ),
                                                       ),
                                                       PieAction(
@@ -871,7 +871,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         PieButtonTheme(
                                                           backgroundColor:
                                                           Colors
-                                                              .red[400],
+                                                              .red[400], iconColor: null,
                                                         ),
                                                       ),
                                                       /**PieAction(
@@ -1146,7 +1146,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                         PieButtonTheme(
                                                           backgroundColor:
                                                           Colors
-                                                              .grey[700],
+                                                              .grey[700], iconColor: null,
                                                         ),
                                                       ),
                                                       /**PieAction(
@@ -1214,7 +1214,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                                                                                                       multiLine: true,
                                                                                                                       caseSensitive: true
                                                                                                                     ), ''),
-                                                        style: TextStyle(fontSize: shortestSide < kTabletBreakpoint  ?  FontSize(18.0).size: FontSize.xLarge.size),
+                                                        style: TextStyle(fontSize: shortestSide < kTabletBreakpoint  ?  18.0: 18.0),
                                                           onSelectionChanged: (selection, cause) {
 
                                                           },
